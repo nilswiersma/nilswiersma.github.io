@@ -25,6 +25,7 @@ format:
   html:
     theme: 
       - darkly
+      - custom.scss
     css: styles.css
     toc: true
 
