@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Nils' blog"
+  # navbar:
+  #   left:
+  #     - index.qmd
+  #     - posts.qmd
+  #     - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - index.qmd
+      - section: "Posts"
+        contents:
+          - section: "2023"
+            contents:
+              - 2023/hexacon23/hexacon23.qmd
+      - about.qmd
+
+format:
+  html:
+    theme: 
+      - darkly
+    css: styles.css
+    toc: true
+
+
+

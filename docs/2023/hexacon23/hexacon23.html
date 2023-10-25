@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-10-25">
+
+<title>Nils’ blog - Hexacon23 Synacktiv CTF</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Posts</li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">2023</a></li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">Hexacon23 Synacktiv CTF</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Nils’ blog</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Posts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">2023</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../2023/hexacon23/hexacon23.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Hexacon23 Synacktiv CTF</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Hexacon23 Synacktiv CTF</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 25, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>At the 2023 edition of <a href="https://www.hexacon.fr/">hexacon</a> there were various CTF challenges, one of which organized at the venue by the event’s organizer, Synacktiv. It involved a smartcard reader attached to small computer and a screen, and a stack of smartcards. The goal of the challenge is to somehow authenticate as admin, which should pop up a specific message on the screen that shows “Waiting for NFC tag…” in <a href="#fig-setup">Figure&nbsp;1</a>.</p>
+<div id="fig-setup" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="setup.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: CTF setup</figcaption>
+</figure>
+</div>
+<p>We grabbed one card from the stack on the bottom left and read it out using <a href="https://f-droid.org/packages/de.syss.MifareClassicTool/">MIFARE Classic Tool</a>. Fortunately it used one of the standard keys included in the application. The dump showed some data in sectors 1, 2 and 3 as shown in <a href="#fig-card">Figure&nbsp;2</a>.</p>
+<div id="fig-card" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="card.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Card contents</figcaption>
+</figure>
+</div>
+<p>The sectors 1 and 3 contain some interesting strings as shown in <a href="#lst-card1">Listing&nbsp;1</a>.</p>
+<div id="lst-card1" class="listing">
+<p>Listing&nbsp;1: Data in card</p>
+<div class="sourceCode" id="lst-card1" data-lst-cap="Data in card"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-card1-1"><a href="#lst-card1-1" aria-hidden="true" tabindex="-1"></a>0000  68 65 78 61 63 6f 6e 5f  67 75 65 73 74 00 00 00  |hexacon_guest...|</span>
+<span id="lst-card1-2"><a href="#lst-card1-2" aria-hidden="true" tabindex="-1"></a>0010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-3"><a href="#lst-card1-3" aria-hidden="true" tabindex="-1"></a>*</span>
+<span id="lst-card1-4"><a href="#lst-card1-4" aria-hidden="true" tabindex="-1"></a>0030  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span>
+<span id="lst-card1-5"><a href="#lst-card1-5" aria-hidden="true" tabindex="-1"></a>0040  0b 5f 6a 80 4d ad d1 4b  53 14 58 58 f2 6b 7d f0  |._j.M..KS.XX.k}.|</span>
+<span id="lst-card1-6"><a href="#lst-card1-6" aria-hidden="true" tabindex="-1"></a>0050  ba 62 dd 2f 89 44 0e 14  5c 35 2b db 00 c8 09 0a  |.b./.D..\5+.....|</span>
+<span id="lst-card1-7"><a href="#lst-card1-7" aria-hidden="true" tabindex="-1"></a>0060  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-8"><a href="#lst-card1-8" aria-hidden="true" tabindex="-1"></a>0070  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span>
+<span id="lst-card1-9"><a href="#lst-card1-9" aria-hidden="true" tabindex="-1"></a>0080  68 74 74 70 73 3a 2f 2f  74 69 6e 79 75 72 6c 2e  |https://tinyurl.|</span>
+<span id="lst-card1-10"><a href="#lst-card1-10" aria-hidden="true" tabindex="-1"></a>0090  63 6f 6d 2f 33 6e 76 6d  66 65 61 75 00 00 00 00  |com/3nvmfeau....|</span>
+<span id="lst-card1-11"><a href="#lst-card1-11" aria-hidden="true" tabindex="-1"></a>00a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-12"><a href="#lst-card1-12" aria-hidden="true" tabindex="-1"></a>00b0  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <a href="https://tinyurl.com/3nvmfeau">URL</a> brings us to a zip archive containing files shown in <a href="#lst-archive">Listing&nbsp;2</a>. This is a subset of the code running on the small computer, handling the data read from the card’s sectors.</p>
+<div id="lst-archive" class="listing">
+<p>Listing&nbsp;2: Archive contents</p>
+<div class="sourceCode" id="lst-archive" data-lst-cap="Archive contents"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-archive-1"><a href="#lst-archive-1" aria-hidden="true" tabindex="-1"></a>.</span>
+<span id="lst-archive-2"><a href="#lst-archive-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="lst-archive-3"><a href="#lst-archive-3" aria-hidden="true" tabindex="-1"></a>└─── src</span>
+<span id="lst-archive-4"><a href="#lst-archive-4" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; ├── include</span>
+<span id="lst-archive-5"><a href="#lst-archive-5" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; │&nbsp;&nbsp; ├── ipc.h</span>
+<span id="lst-archive-6"><a href="#lst-archive-6" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; │&nbsp;&nbsp; ├── main.h</span>
+<span id="lst-archive-7"><a href="#lst-archive-7" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; │&nbsp;&nbsp; ├── nfc.h</span>
+<span id="lst-archive-8"><a href="#lst-archive-8" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; │&nbsp;&nbsp; └── util.h</span>
+<span id="lst-archive-9"><a href="#lst-archive-9" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; ├── main.c</span>
+<span id="lst-archive-10"><a href="#lst-archive-10" aria-hidden="true" tabindex="-1"></a> &nbsp;&nbsp; └── util.c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>README.md</code> explains the challenge:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Dear Hexacon guest,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>If you read these lines, you probably visited the Synacktiv stand </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>and some ninjas might have briefed you.</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Otherwise, the goal is to exploit vulnerabilities inside the NFC </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>reader to authenticate successfully as admin.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>The sources of the challenge are available into the `src/` directory.</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>NB: Some files such as `ipc.c` and `nfc.C` which implement some </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>used functions are not part of the archive, this is intended, as </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>they are not needed to complete the challenge.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Have fun ! o/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>main</code> (<a href="#lst-main">Listing&nbsp;3</a>) of the application, initializes an admin token stored in the filesystem of the machine with <code>get_admin_token</code> and then enters a reading loop. When presented a card, the <code>notify</code> calls update messages on the screen.</p>
+<div id="lst-main" class="listing">
+<p>Listing&nbsp;3: <code>main</code> and <code>get_admin_token</code> functions</p>
+<div class="sourceCode" id="lst-main" data-lst-cap="`main` and `get_admin_token` functions"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-main-1"><a href="#lst-main-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">"main.h"</span></span>
+<span id="lst-main-2"><a href="#lst-main-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">"util.h"</span></span>
+<span id="lst-main-3"><a href="#lst-main-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">"nfc.h"</span></span>
+<span id="lst-main-4"><a href="#lst-main-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-5"><a href="#lst-main-5" aria-hidden="true" tabindex="-1"></a><span class="dt">uint8_t</span> admin_token<span class="op">[</span>TOKEN_SIZE<span class="op">];</span></span>
+<span id="lst-main-6"><a href="#lst-main-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-7"><a href="#lst-main-7" aria-hidden="true" tabindex="-1"></a>context_t context<span class="op">;</span></span>
+<span id="lst-main-8"><a href="#lst-main-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-9"><a href="#lst-main-9" aria-hidden="true" tabindex="-1"></a><span class="dt">uint8_t</span> key<span class="op">[</span>KEY_SIZE<span class="op">];</span></span>
+<span id="lst-main-10"><a href="#lst-main-10" aria-hidden="true" tabindex="-1"></a><span class="dt">uint32_t</span> iterations<span class="op">;</span></span>
+<span id="lst-main-11"><a href="#lst-main-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-12"><a href="#lst-main-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="lst-main-13"><a href="#lst-main-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-14"><a href="#lst-main-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Retrieve secret</span></span>
+<span id="lst-main-15"><a href="#lst-main-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>get_admin_token<span class="op">(</span>admin_token<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-main-16"><a href="#lst-main-16" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">"[-] Failed to retrieve secret</span><span class="sc">\n</span><span class="st">"</span><span class="op">);</span></span>
+<span id="lst-main-17"><a href="#lst-main-17" aria-hidden="true" tabindex="-1"></a>        notify<span class="op">(</span>UNEXPECTED_FAIL<span class="op">);</span></span>
+<span id="lst-main-18"><a href="#lst-main-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="lst-main-19"><a href="#lst-main-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-main-20"><a href="#lst-main-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-21"><a href="#lst-main-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="lst-main-22"><a href="#lst-main-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-23"><a href="#lst-main-23" aria-hidden="true" tabindex="-1"></a>        iterations <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="lst-main-24"><a href="#lst-main-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-25"><a href="#lst-main-25" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Retrieve NFC card username</span></span>
+<span id="lst-main-26"><a href="#lst-main-26" aria-hidden="true" tabindex="-1"></a>        read_card<span class="op">(&amp;</span>context<span class="op">);</span></span>
+<span id="lst-main-27"><a href="#lst-main-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-28"><a href="#lst-main-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>derive_key<span class="op">(</span>admin_token<span class="op">,</span> iterations<span class="op">,</span> key<span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="lst-main-29"><a href="#lst-main-29" aria-hidden="true" tabindex="-1"></a>            notify<span class="op">(</span>UNEXPECTED_FAIL<span class="op">);</span></span>
+<span id="lst-main-30"><a href="#lst-main-30" aria-hidden="true" tabindex="-1"></a>            sleep<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="lst-main-31"><a href="#lst-main-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span><span class="op">;</span></span>
+<span id="lst-main-32"><a href="#lst-main-32" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="lst-main-33"><a href="#lst-main-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-34"><a href="#lst-main-34" aria-hidden="true" tabindex="-1"></a>        status_t status <span class="op">=</span> check_token<span class="op">(&amp;</span>context<span class="op">,</span> admin_token<span class="op">,</span> key<span class="op">);</span></span>
+<span id="lst-main-35"><a href="#lst-main-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-36"><a href="#lst-main-36" aria-hidden="true" tabindex="-1"></a>        notify<span class="op">(</span>status<span class="op">);</span></span>
+<span id="lst-main-37"><a href="#lst-main-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-38"><a href="#lst-main-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>status <span class="op">==</span> VALID_TOKEN<span class="op">)</span> <span class="op">{</span></span>
+<span id="lst-main-39"><a href="#lst-main-39" aria-hidden="true" tabindex="-1"></a>            sleep<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="lst-main-40"><a href="#lst-main-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-41"><a href="#lst-main-41" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>strcmp<span class="op">(</span>context<span class="op">.</span>username<span class="op">,</span> ADMIN_USERNAME<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-main-42"><a href="#lst-main-42" aria-hidden="true" tabindex="-1"></a>                notify<span class="op">(</span>ADMIN_AUTH<span class="op">);</span></span>
+<span id="lst-main-43"><a href="#lst-main-43" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="lst-main-44"><a href="#lst-main-44" aria-hidden="true" tabindex="-1"></a>                notify<span class="op">(</span>GUEST_AUTH<span class="op">);</span></span>
+<span id="lst-main-45"><a href="#lst-main-45" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="lst-main-46"><a href="#lst-main-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-47"><a href="#lst-main-47" aria-hidden="true" tabindex="-1"></a>            sleep<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="lst-main-48"><a href="#lst-main-48" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="lst-main-49"><a href="#lst-main-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-50"><a href="#lst-main-50" aria-hidden="true" tabindex="-1"></a>        sleep<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="lst-main-51"><a href="#lst-main-51" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-main-52"><a href="#lst-main-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-53"><a href="#lst-main-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="lst-main-54"><a href="#lst-main-54" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="lst-main-55"><a href="#lst-main-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-56"><a href="#lst-main-56" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> get_admin_token<span class="op">(</span><span class="dt">char</span> <span class="op">*</span> admin_token<span class="op">)</span></span>
+<span id="lst-main-57"><a href="#lst-main-57" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="lst-main-58"><a href="#lst-main-58" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FILE</span> <span class="op">*</span> fd<span class="op">;</span></span>
+<span id="lst-main-59"><a href="#lst-main-59" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> count<span class="op">;</span></span>
+<span id="lst-main-60"><a href="#lst-main-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="lst-main-61"><a href="#lst-main-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">((</span>fd <span class="op">=</span> fopen<span class="op">(</span><span class="st">"data/admin_token.bin"</span><span class="op">,</span> <span class="st">"rb"</span><span class="op">))</span> <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="lst-main-62"><a href="#lst-main-62" aria-hidden="true" tabindex="-1"></a>        perror<span class="op">(</span><span class="st">"fopen"</span><span class="op">);</span></span>
+<span id="lst-main-63"><a href="#lst-main-63" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="lst-main-64"><a href="#lst-main-64" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-main-65"><a href="#lst-main-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-66"><a href="#lst-main-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">((</span>count <span class="op">=</span> fread<span class="op">(</span>admin_token<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> TOKEN_SIZE<span class="op">,</span> fd<span class="op">))</span> <span class="op">!=</span> TOKEN_SIZE<span class="op">)</span> <span class="op">{</span></span>
+<span id="lst-main-67"><a href="#lst-main-67" aria-hidden="true" tabindex="-1"></a>        perror<span class="op">(</span><span class="st">"fread"</span><span class="op">);</span></span>
+<span id="lst-main-68"><a href="#lst-main-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="lst-main-69"><a href="#lst-main-69" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> </span>
+<span id="lst-main-70"><a href="#lst-main-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-71"><a href="#lst-main-71" aria-hidden="true" tabindex="-1"></a>    fclose<span class="op">(</span>fd<span class="op">);</span></span>
+<span id="lst-main-72"><a href="#lst-main-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-main-73"><a href="#lst-main-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="lst-main-74"><a href="#lst-main-74" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>read_card</code> (<a href="#lst-read-card">Listing&nbsp;4</a>) moves data from the card’s sectors into the global <code>context</code>. This function contains the first potential vulnerability, as it uses <code>strcpy</code> to move the content from the third sector. This function will keep reading data from the card until a 0-byte is encountered.</p>
+<div id="lst-read-card" class="listing">
+<p>Listing&nbsp;4: <code>read_card</code> function</p>
+<div class="sourceCode" id="lst-read-card" data-lst-cap="`read_card` function"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-read-card-1"><a href="#lst-read-card-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> read_card<span class="op">(</span>context_t <span class="op">*</span>ctx<span class="op">)</span></span>
+<span id="lst-read-card-2"><a href="#lst-read-card-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="lst-read-card-3"><a href="#lst-read-card-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint8_t</span> sectors<span class="op">[</span>SECTORS_COUNT <span class="op">*</span> BLOCKS_COUNT <span class="op">*</span> BLOCK_SIZE<span class="op">];</span></span>
+<span id="lst-read-card-4"><a href="#lst-read-card-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-read-card-5"><a href="#lst-read-card-5" aria-hidden="true" tabindex="-1"></a>    read_nfc_tag<span class="op">(</span>sectors<span class="op">);</span></span>
+<span id="lst-read-card-6"><a href="#lst-read-card-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-read-card-7"><a href="#lst-read-card-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Read username</span></span>
+<span id="lst-read-card-8"><a href="#lst-read-card-8" aria-hidden="true" tabindex="-1"></a>    strncpy<span class="op">(</span>ctx<span class="op">-&gt;</span>username<span class="op">,</span> read_sector<span class="op">(</span>sectors<span class="op">,</span> <span class="dv">1</span><span class="op">),</span> USERNAME_SIZE <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="lst-read-card-9"><a href="#lst-read-card-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-read-card-10"><a href="#lst-read-card-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Read token</span></span>
+<span id="lst-read-card-11"><a href="#lst-read-card-11" aria-hidden="true" tabindex="-1"></a>    memcpy<span class="op">(</span>ctx<span class="op">-&gt;</span>token<span class="op">,</span> read_sector<span class="op">(</span>sectors<span class="op">,</span> <span class="dv">2</span><span class="op">),</span> TOKEN_SIZE<span class="op">);</span></span>
+<span id="lst-read-card-12"><a href="#lst-read-card-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-read-card-13"><a href="#lst-read-card-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Read data</span></span>
+<span id="lst-read-card-14"><a href="#lst-read-card-14" aria-hidden="true" tabindex="-1"></a>    strcpy<span class="op">(</span>ctx<span class="op">-&gt;</span>data<span class="op">,</span> read_sector<span class="op">(</span>sectors<span class="op">,</span> <span class="dv">3</span><span class="op">));</span></span>
+<span id="lst-read-card-15"><a href="#lst-read-card-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>data</code> field in the <code>context</code> structure has space for the amount of data (0x30 bytes) of sector 3. <code>context</code> is stored in the globals together with the <code>admin_token</code>, <code>key</code> and <code>iterations</code> (see <a href="#lst-main">Listing&nbsp;3</a>). So by overflowing the <code>data</code> field we can overwrite <code>key</code> and <code>iterations</code>. <code>iterations</code> determines the amount of hash iterations are performed in the <code>PKCS5_PKBDF2_HMAC</code> key derivation step in <code>derive_key</code> (see <a href="#lst-derive-key">Listing&nbsp;5</a>).</p>
+<div id="lst-derive-key" class="listing">
+<p>Listing&nbsp;5: <code>derive_key</code> function</p>
+<div class="sourceCode" id="lst-derive-key" data-lst-cap="`derive_key` function"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-derive-key-1"><a href="#lst-derive-key-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> derive_key<span class="op">(</span><span class="dt">char</span> <span class="op">*</span> admin_token<span class="op">,</span> <span class="dt">uint32_t</span> iterations<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span> key<span class="op">)</span></span>
+<span id="lst-derive-key-2"><a href="#lst-derive-key-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="lst-derive-key-3"><a href="#lst-derive-key-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> PKCS5_PBKDF2_HMAC<span class="op">(</span></span>
+<span id="lst-derive-key-4"><a href="#lst-derive-key-4" aria-hidden="true" tabindex="-1"></a>        admin_token<span class="op">,</span> <span class="co">// pass</span></span>
+<span id="lst-derive-key-5"><a href="#lst-derive-key-5" aria-hidden="true" tabindex="-1"></a>        TOKEN_SIZE<span class="op">,</span> <span class="co">// passlen</span></span>
+<span id="lst-derive-key-6"><a href="#lst-derive-key-6" aria-hidden="true" tabindex="-1"></a>        NULL<span class="op">,</span> <span class="co">// salt</span></span>
+<span id="lst-derive-key-7"><a href="#lst-derive-key-7" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span><span class="op">,</span> <span class="co">// saltlen</span></span>
+<span id="lst-derive-key-8"><a href="#lst-derive-key-8" aria-hidden="true" tabindex="-1"></a>        iterations<span class="op">,</span> <span class="co">// iter</span></span>
+<span id="lst-derive-key-9"><a href="#lst-derive-key-9" aria-hidden="true" tabindex="-1"></a>        EVP_sha256<span class="op">(),</span> <span class="co">// digest</span></span>
+<span id="lst-derive-key-10"><a href="#lst-derive-key-10" aria-hidden="true" tabindex="-1"></a>        KEY_SIZE<span class="op">,</span> <span class="co">// keylen</span></span>
+<span id="lst-derive-key-11"><a href="#lst-derive-key-11" aria-hidden="true" tabindex="-1"></a>        key <span class="co">// out</span></span>
+<span id="lst-derive-key-12"><a href="#lst-derive-key-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="lst-derive-key-13"><a href="#lst-derive-key-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we can obtain the <code>admin_token</code>, we can create a card where the <code>username</code> is <code>hexacon_admin</code> and the <code>token</code> is <code>admin_token</code>. This should lead us to the authenticated admin screen.</p>
+<p>In a normal run <code>iterations</code> is set to <code>1000</code> (see <a href="#lst-main">Listing&nbsp;3</a>), which is not very high for a proper key derivation system. So it could be that <code>admin_token</code> is some brute-forcible string that could be found in a wordlist, as the <code>salt</code> input is set to <code>NULL</code>. With the overflow we could change the amount of iterations to <code>1</code>, so then just a single <code>SHA256</code> hash is calculated over the password. However it is more likely that the designer of the challenge just put a random <code>0x20</code> byte string in there. In this case even bruteforcing a single 256-bit hash is not feasible.</p>
+<p>We considered setting <code>iterations</code> to <code>0</code>, so that perhaps no hash is calculated at all. This case is normaly caught by the <a href="https://www.openssl.org/docs/manmaster/man3/PKCS5_PBKDF2_HMAC.html">OpenSSL implementation</a> that was likely used, looking at the function signature. So this would not work either.</p>
+<p>In the <code>compute_token</code> function (<a href="#lst-compute-token">Listing&nbsp;6</a>), the <code>key[]</code> array, resulting from <code>derive_key</code> function, is used to perform authentication by XORing it with the <code>SHA256</code> hash of the provided <code>username</code>, stored in sector 1 of the card.</p>
+<div id="lst-compute-token" class="listing">
+<p>Listing&nbsp;6: <code>compute_token</code> and <code>check_token</code> functions</p>
+<div class="sourceCode" id="lst-compute-token" data-lst-cap="`compute_token` and `check_token` functions"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-compute-token-1"><a href="#lst-compute-token-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> compute_token<span class="op">(</span>context_t <span class="op">*</span>ctx<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span> key<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span> token<span class="op">)</span></span>
+<span id="lst-compute-token-2"><a href="#lst-compute-token-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="lst-compute-token-3"><a href="#lst-compute-token-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> to_sign<span class="op">[</span>USERNAME_SIZE<span class="op">]</span> <span class="op">=</span> <span class="op">{};</span></span>
+<span id="lst-compute-token-4"><a href="#lst-compute-token-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-5"><a href="#lst-compute-token-5" aria-hidden="true" tabindex="-1"></a>    memcpy<span class="op">(</span>to_sign<span class="op">,</span> ctx<span class="op">-&gt;</span>username<span class="op">,</span> USERNAME_SIZE<span class="op">);</span></span>
+<span id="lst-compute-token-6"><a href="#lst-compute-token-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-7"><a href="#lst-compute-token-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>SHA256<span class="op">(</span>to_sign<span class="op">,</span> strlen<span class="op">(</span>ctx<span class="op">-&gt;</span>username<span class="op">),</span> token<span class="op">)</span> <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="lst-compute-token-8"><a href="#lst-compute-token-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="lst-compute-token-9"><a href="#lst-compute-token-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-compute-token-10"><a href="#lst-compute-token-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-11"><a href="#lst-compute-token-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> TOKEN_SIZE<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="lst-compute-token-12"><a href="#lst-compute-token-12" aria-hidden="true" tabindex="-1"></a>        token<span class="op">[</span>i<span class="op">]</span> <span class="op">^=</span> key<span class="op">[</span>i<span class="op">];</span></span>
+<span id="lst-compute-token-13"><a href="#lst-compute-token-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-compute-token-14"><a href="#lst-compute-token-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-15"><a href="#lst-compute-token-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="lst-compute-token-16"><a href="#lst-compute-token-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="lst-compute-token-17"><a href="#lst-compute-token-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-18"><a href="#lst-compute-token-18" aria-hidden="true" tabindex="-1"></a>status_t check_token<span class="op">(</span>context_t <span class="op">*</span> ctx<span class="op">,</span> <span class="dt">uint8_t</span> <span class="op">*</span> admin_token<span class="op">,</span> <span class="dt">uint8_t</span> <span class="op">*</span> key<span class="op">)</span></span>
+<span id="lst-compute-token-19"><a href="#lst-compute-token-19" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="lst-compute-token-20"><a href="#lst-compute-token-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>strcmp<span class="op">(</span>ctx<span class="op">-&gt;</span>username<span class="op">,</span> ADMIN_USERNAME<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-compute-token-21"><a href="#lst-compute-token-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Admin authentication</span></span>
+<span id="lst-compute-token-22"><a href="#lst-compute-token-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>memcmp<span class="op">(</span>ctx<span class="op">-&gt;</span>token<span class="op">,</span> admin_token<span class="op">,</span> TOKEN_SIZE<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-compute-token-23"><a href="#lst-compute-token-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> INVALID_TOKEN<span class="op">;</span></span>
+<span id="lst-compute-token-24"><a href="#lst-compute-token-24" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="lst-compute-token-25"><a href="#lst-compute-token-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="lst-compute-token-26"><a href="#lst-compute-token-26" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Regular guest authentication</span></span>
+<span id="lst-compute-token-27"><a href="#lst-compute-token-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="lst-compute-token-28"><a href="#lst-compute-token-28" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Read card with token to check authenticity</span></span>
+<span id="lst-compute-token-29"><a href="#lst-compute-token-29" aria-hidden="true" tabindex="-1"></a>        read_card<span class="op">(</span>ctx<span class="op">);</span></span>
+<span id="lst-compute-token-30"><a href="#lst-compute-token-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-31"><a href="#lst-compute-token-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">uint8_t</span> expected_token<span class="op">[</span>TOKEN_SIZE<span class="op">]</span> <span class="op">=</span> <span class="op">{};</span></span>
+<span id="lst-compute-token-32"><a href="#lst-compute-token-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-33"><a href="#lst-compute-token-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>compute_token<span class="op">(</span>ctx<span class="op">,</span> key<span class="op">,</span> expected_token<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-compute-token-34"><a href="#lst-compute-token-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> UNEXPECTED_FAIL<span class="op">;</span></span>
+<span id="lst-compute-token-35"><a href="#lst-compute-token-35" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="lst-compute-token-36"><a href="#lst-compute-token-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-37"><a href="#lst-compute-token-37" aria-hidden="true" tabindex="-1"></a>        <span class="pp">#ifdef DEBUG</span></span>
+<span id="lst-compute-token-38"><a href="#lst-compute-token-38" aria-hidden="true" tabindex="-1"></a>        <span class="op">...</span></span>
+<span id="lst-compute-token-39"><a href="#lst-compute-token-39" aria-hidden="true" tabindex="-1"></a>        <span class="pp">#endif</span></span>
+<span id="lst-compute-token-40"><a href="#lst-compute-token-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-41"><a href="#lst-compute-token-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>memcmp<span class="op">(</span>ctx<span class="op">-&gt;</span>token<span class="op">,</span> expected_token<span class="op">,</span> TOKEN_SIZE<span class="op">))</span> <span class="op">{</span></span>
+<span id="lst-compute-token-42"><a href="#lst-compute-token-42" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> INVALID_TOKEN<span class="op">;</span></span>
+<span id="lst-compute-token-43"><a href="#lst-compute-token-43" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="lst-compute-token-44"><a href="#lst-compute-token-44" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="lst-compute-token-45"><a href="#lst-compute-token-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-compute-token-46"><a href="#lst-compute-token-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> VALID_TOKEN<span class="op">;</span></span>
+<span id="lst-compute-token-47"><a href="#lst-compute-token-47" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The unmodified card passes the token checks as guest, as shown on the screen, so we know that the token in sector 2 matches the username in sector 3. Therefore, we can calculate the value of <code>key</code> by simply XORing it with the hash of the <code>username</code> from sector 1 as shown below.</p>
+<div id="lst-token-check" class="listing">
+<p>Listing&nbsp;7: Code to recover authentication key</p>
+<div class="sourceCode" id="lst-token-check" data-lst-cap="Code to recover authentication key"><pre class="sourceCode Python code-with-copy"><code class="sourceCode python"><span id="lst-token-check-1"><a href="#lst-token-check-1" aria-hidden="true" tabindex="-1"></a>token <span class="op">=</span> <span class="bu">bytes</span>.fromhex(</span>
+<span id="lst-token-check-2"><a href="#lst-token-check-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'0B5F6A804DADD14B53145858F26B7DF0BA62DD2F89440E145C352BDB00C8090A'</span>)</span>
+<span id="lst-token-check-3"><a href="#lst-token-check-3" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> <span class="bu">bytes</span>(a <span class="op">^</span> b <span class="cf">for</span> a, b <span class="kw">in</span> <span class="bu">zip</span>(token, sha256(<span class="st">b'hexacon_guest'</span>).digest()))</span>
+<span id="lst-token-check-4"><a href="#lst-token-check-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>key<span class="sc">.</span><span class="bu">hex</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="lst-token-check-5"><a href="#lst-token-check-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-token-check-6"><a href="#lst-token-check-6" aria-hidden="true" tabindex="-1"></a><span class="co"># '78eae65a206ad5631fc11748edeb2f84a01723b32c7b9adbe1a6311f207ea2bf' </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now forge tokens for any <code>username</code>, including <code>hexacon_admin</code>, which should pop up the <code>notify(ADMIN_AUTH)</code>. However, if we set <code>username</code> like this, the <code>check_token</code> function (<a href="#lst-compute-token">Listing&nbsp;6</a>) will take a different path where it compares against the <code>admin_token</code>, which we still don’t know, and also cannot reach with the <code>strcpy</code> overflow.</p>
+<p>Then we noticed the application reads a second time from the card while in the non-admin branch of <code>check_token</code>, which will refill the global <code>context</code> structure. This means the application contains a <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">TOCTOU</a> type vulnerability where some checks are performed on one copy of the data, and then performs actions based on another copy of the data. Namely, the check on <code>username</code> to reach the right branch is performed on the first copy from the card, while the check in the <code>main</code> loop, which determines which final message we reach, is performed on the second read. So if we can switch the <code>username</code> portion of the card’s data fast enough, we can reach the right branch in <code>check_token</code> while setting the username to <code>hexacon_admin</code> and triggering the <code>notify(ADMIN_AUTH)</code>. With something like a <a href="https://github.com/Proxmark/proxmark3">Proxmark</a> or a <a href="https://docs.flipper.net/nfc/read">Flipper Zero</a> it’s probably possible to switch between card data fast enough. Alternatively, we could simply use two cards, write the different <code>username</code>s with matching <code>token</code>s, and switch them in between reads, if we are fast enough. However, our ninja skills were fast enough :(</p>
+<p>Recall the <code>iterations</code> variable that we could overwrite with the overflow. This determines the amount of times the pseudorandom function (<code>HMAC</code> in this case) is applied on the potentially weak password input in the <code>PBKDF2_HMAC</code> function. Setting this value really high, rather than really low, also means more computation time is needed in the application reading the cards. Furthermore, this calculation is performed between the two card reads, so this might give us enough time to manually switch between two cards.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">...</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">// v- first card read</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        read_card<span class="op">(&amp;</span>context<span class="op">);</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">// v- PBKDF in here</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>derive_key<span class="op">(</span>admin_token<span class="op">,</span> iterations<span class="op">,</span> key<span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">...</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">// v- second card read in here</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        status_t status <span class="op">=</span> check_token<span class="op">(&amp;</span>context<span class="op">,</span> admin_token<span class="op">,</span> key<span class="op">);</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">...</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>status <span class="op">==</span> VALID_TOKEN<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>strcmp<span class="op">(</span>context<span class="op">.</span>username<span class="op">,</span> ADMIN_USERNAME<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                notify<span class="op">(</span>ADMIN_AUTH<span class="op">);</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                notify<span class="op">(</span>GUEST_AUTH<span class="op">);</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We now need to set up two cards in the following way to combine both the buffer overflow and the TOCTOU bugs:</p>
+<ul>
+<li>One card will contain any <code>username</code> string in sector 1 that is not <code>hexacon_admin</code>. This card needs to trigger the overflow to overwrite <code>iterations</code>. By doing this, it will also overwrite <code>key[]</code>, so we need to replace the <code>token</code> in sector 2 such that it matches with the overwritten <code>key[]</code>. Due to the offsets, the last 0x10 bytes of sector 3 will end up in <code>key[]</code> which contain some special values. The function <code>read_nfc_tag</code> from <code>nfc.h</code> warns us that “<em>the NFC tag A key MUST be ”FFFFFFFFFFFF”</em>”, which refers to to the light green portion of <a href="#fig-card">Figure&nbsp;2</a>. We just left all those bytes as they were, so we recalculated the <code>token</code> as shown in <a href="#lst-token-check">Listing&nbsp;7</a>, i.e.&nbsp;<code>token = sha256(username) ^ key</code>. The first 0x10 bytes of sector 4 will be the second half of the key, we just filled this with 0xff-bytes. Then the following 4 bytes of sector 4 can be used to control the <code>iterations</code> variable to something large like <code>0xffffffff</code>.</li>
+<li>The second card will contain the <code>hexacon_admin</code> string in the <code>username</code>’s sector 1. This card will need also a valid token matching the previously overwritten <code>key[]</code>, which is generated following the same <code>token = sha256(username) ^ key</code> calculation.</li>
+</ul>
+<p>By presenting first the guest card, and then swapping to the admin card while the <code>PBKDF2_HMAC</code> calculation is working, we should land on the <code>notify(ADMIN_AUTH)</code> page.</p>
+<p>The Python script in <a href="#lst-card-data">Listing&nbsp;8</a> generates the data for both cards’ sectors. <a href="#lst-card-data-out">Listing&nbsp;9</a> shows the data for the relevant card sectors.</p>
+<div id="lst-card-data" class="listing">
+<p>Listing&nbsp;8: Code to generate the card data that exploits the vulnerabilities</p>
+<div class="sourceCode" id="lst-card-data" data-lst-cap="Code to generate the card data that exploits the vulnerabilities"><pre class="sourceCode Python code-with-copy"><code class="sourceCode python"><span id="lst-card-data-1"><a href="#lst-card-data-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hashlib <span class="im">import</span> sha256</span>
+<span id="lst-card-data-2"><a href="#lst-card-data-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-3"><a href="#lst-card-data-3" aria-hidden="true" tabindex="-1"></a>key_suffix <span class="op">=</span> <span class="st">'FFFFFFFFFFFFFF078069FFFFFFFFFFFF'</span></span>
+<span id="lst-card-data-4"><a href="#lst-card-data-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-5"><a href="#lst-card-data-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate original key, output of pbkdf with unknown password </span></span>
+<span id="lst-card-data-6"><a href="#lst-card-data-6" aria-hidden="true" tabindex="-1"></a><span class="co"># and empty salt</span></span>
+<span id="lst-card-data-7"><a href="#lst-card-data-7" aria-hidden="true" tabindex="-1"></a>token1 <span class="op">=</span> sha256(<span class="st">b'hexacon_guest'</span>).digest()</span>
+<span id="lst-card-data-8"><a href="#lst-card-data-8" aria-hidden="true" tabindex="-1"></a>token2 <span class="op">=</span> <span class="bu">bytes</span>.fromhex(</span>
+<span id="lst-card-data-9"><a href="#lst-card-data-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'0B5F6A804DADD14B53145858F26B7DF0BA62DD2F89440E145C352BDB00C8090A'</span>)</span>
+<span id="lst-card-data-10"><a href="#lst-card-data-10" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> <span class="bu">bytes</span>(a <span class="op">^</span> b <span class="cf">for</span> a, b <span class="kw">in</span> <span class="bu">zip</span>(token1, token2))</span>
+<span id="lst-card-data-11"><a href="#lst-card-data-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-12"><a href="#lst-card-data-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate data for first card with hexacon_guest username</span></span>
+<span id="lst-card-data-13"><a href="#lst-card-data-13" aria-hidden="true" tabindex="-1"></a>token3 <span class="op">=</span> sha256(<span class="st">b'hexacon_guest'</span>).digest()</span>
+<span id="lst-card-data-14"><a href="#lst-card-data-14" aria-hidden="true" tabindex="-1"></a>key2 <span class="op">=</span> <span class="bu">bytes</span>.fromhex(key_suffix) <span class="op">+</span> <span class="st">b'</span><span class="ch">\xff</span><span class="st">'</span><span class="op">*</span><span class="bn">0x10</span></span>
+<span id="lst-card-data-15"><a href="#lst-card-data-15" aria-hidden="true" tabindex="-1"></a>token4 <span class="op">=</span> <span class="bu">bytes</span>(a <span class="op">^</span> b <span class="cf">for</span> a, b <span class="kw">in</span> <span class="bu">zip</span>(token3, key2))</span>
+<span id="lst-card-data-16"><a href="#lst-card-data-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-17"><a href="#lst-card-data-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'guest card'</span>)</span>
+<span id="lst-card-data-18"><a href="#lst-card-data-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-19"><a href="#lst-card-data-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-20"><a href="#lst-card-data-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sector 2 token'</span>)</span>
+<span id="lst-card-data-21"><a href="#lst-card-data-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-22"><a href="#lst-card-data-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(token4[:<span class="dv">16</span>].<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-23"><a href="#lst-card-data-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(token4[<span class="dv">16</span>:].<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-24"><a href="#lst-card-data-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'00'</span><span class="op">*</span><span class="dv">16</span>)</span>
+<span id="lst-card-data-25"><a href="#lst-card-data-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(key_suffix)</span>
+<span id="lst-card-data-26"><a href="#lst-card-data-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-27"><a href="#lst-card-data-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sector 3 data'</span>)</span>
+<span id="lst-card-data-28"><a href="#lst-card-data-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-29"><a href="#lst-card-data-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-30"><a href="#lst-card-data-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((<span class="st">b'A'</span><span class="op">*</span><span class="bn">0x10</span>).<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-31"><a href="#lst-card-data-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((<span class="st">b'A'</span><span class="op">*</span><span class="bn">0x10</span>).<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-32"><a href="#lst-card-data-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((<span class="st">b'A'</span><span class="op">*</span><span class="bn">0x10</span>).<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-33"><a href="#lst-card-data-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(key_suffix)</span>
+<span id="lst-card-data-34"><a href="#lst-card-data-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-35"><a href="#lst-card-data-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-36"><a href="#lst-card-data-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sector 4 overflow'</span>)</span>
+<span id="lst-card-data-37"><a href="#lst-card-data-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-38"><a href="#lst-card-data-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'FF'</span><span class="op">*</span><span class="dv">16</span>) <span class="co"># Second half of key</span></span>
+<span id="lst-card-data-39"><a href="#lst-card-data-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'FF'</span><span class="op">*</span><span class="dv">4</span> <span class="op">+</span> <span class="st">'00'</span><span class="op">*</span><span class="dv">12</span>) <span class="co"># iterations value</span></span>
+<span id="lst-card-data-40"><a href="#lst-card-data-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'00'</span><span class="op">*</span><span class="dv">16</span>)</span>
+<span id="lst-card-data-41"><a href="#lst-card-data-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(key_suffix)</span>
+<span id="lst-card-data-42"><a href="#lst-card-data-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-43"><a href="#lst-card-data-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-44"><a href="#lst-card-data-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'admin card'</span>)</span>
+<span id="lst-card-data-45"><a href="#lst-card-data-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-46"><a href="#lst-card-data-46" aria-hidden="true" tabindex="-1"></a>token5 <span class="op">=</span> sha256(<span class="st">b'hexacon_admin'</span>).digest()</span>
+<span id="lst-card-data-47"><a href="#lst-card-data-47" aria-hidden="true" tabindex="-1"></a>key2 <span class="op">=</span> <span class="bu">bytes</span>.fromhex(key_suffix) <span class="op">+</span> <span class="st">b'</span><span class="ch">\xff</span><span class="st">'</span><span class="op">*</span><span class="bn">0x10</span></span>
+<span id="lst-card-data-48"><a href="#lst-card-data-48" aria-hidden="true" tabindex="-1"></a>token6 <span class="op">=</span> <span class="bu">bytes</span>(a <span class="op">^</span> b <span class="cf">for</span> a, b <span class="kw">in</span> <span class="bu">zip</span>(token5, key2))</span>
+<span id="lst-card-data-49"><a href="#lst-card-data-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-50"><a href="#lst-card-data-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-51"><a href="#lst-card-data-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sector 1 username'</span>)</span>
+<span id="lst-card-data-52"><a href="#lst-card-data-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-53"><a href="#lst-card-data-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">b'hexacon_admin'</span>.<span class="bu">hex</span>().upper() <span class="op">+</span> <span class="st">'00'</span><span class="op">*</span><span class="dv">3</span>)</span>
+<span id="lst-card-data-54"><a href="#lst-card-data-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'00'</span><span class="op">*</span><span class="dv">16</span>)</span>
+<span id="lst-card-data-55"><a href="#lst-card-data-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'00'</span><span class="op">*</span><span class="dv">16</span>)</span>
+<span id="lst-card-data-56"><a href="#lst-card-data-56" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(key_suffix)</span>
+<span id="lst-card-data-57"><a href="#lst-card-data-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-58"><a href="#lst-card-data-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-59"><a href="#lst-card-data-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sector 2 token'</span>)</span>
+<span id="lst-card-data-60"><a href="#lst-card-data-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="lst-card-data-61"><a href="#lst-card-data-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(token6[:<span class="dv">16</span>].<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-62"><a href="#lst-card-data-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(token6[<span class="dv">16</span>:].<span class="bu">hex</span>().upper())</span>
+<span id="lst-card-data-63"><a href="#lst-card-data-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'00'</span><span class="op">*</span><span class="dv">16</span>)</span>
+<span id="lst-card-data-64"><a href="#lst-card-data-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(key_suffix)</span>
+<span id="lst-card-data-65"><a href="#lst-card-data-65" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="lst-card-data-out" class="listing">
+<p>Listing&nbsp;9: Data for both cards</p>
+<div class="sourceCode" id="lst-card-data-out" data-lst-cap="Data for both cards"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-card-data-out-1"><a href="#lst-card-data-out-1" aria-hidden="true" tabindex="-1"></a>guest card</span>
+<span id="lst-card-data-out-2"><a href="#lst-card-data-out-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-3"><a href="#lst-card-data-out-3" aria-hidden="true" tabindex="-1"></a>Sector 2 token</span>
+<span id="lst-card-data-out-4"><a href="#lst-card-data-out-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-5"><a href="#lst-card-data-out-5" aria-hidden="true" tabindex="-1"></a>8C4A73259238FB2FCCBCB0EFE07FAD8B</span>
+<span id="lst-card-data-out-6"><a href="#lst-card-data-out-6" aria-hidden="true" tabindex="-1"></a>E58A01635AC06B30426CE53BDF49544A</span>
+<span id="lst-card-data-out-7"><a href="#lst-card-data-out-7" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
+<span id="lst-card-data-out-8"><a href="#lst-card-data-out-8" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-9"><a href="#lst-card-data-out-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-10"><a href="#lst-card-data-out-10" aria-hidden="true" tabindex="-1"></a>Sector 3 data</span>
+<span id="lst-card-data-out-11"><a href="#lst-card-data-out-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-12"><a href="#lst-card-data-out-12" aria-hidden="true" tabindex="-1"></a>41414141414141414141414141414141</span>
+<span id="lst-card-data-out-13"><a href="#lst-card-data-out-13" aria-hidden="true" tabindex="-1"></a>41414141414141414141414141414141</span>
+<span id="lst-card-data-out-14"><a href="#lst-card-data-out-14" aria-hidden="true" tabindex="-1"></a>41414141414141414141414141414141</span>
+<span id="lst-card-data-out-15"><a href="#lst-card-data-out-15" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-16"><a href="#lst-card-data-out-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-17"><a href="#lst-card-data-out-17" aria-hidden="true" tabindex="-1"></a>Sector 4 overflow</span>
+<span id="lst-card-data-out-18"><a href="#lst-card-data-out-18" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>
+<span id="lst-card-data-out-19"><a href="#lst-card-data-out-19" aria-hidden="true" tabindex="-1"></a>FFFFFFFF000000000000000000000000</span>
+<span id="lst-card-data-out-20"><a href="#lst-card-data-out-20" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
+<span id="lst-card-data-out-21"><a href="#lst-card-data-out-21" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-22"><a href="#lst-card-data-out-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-23"><a href="#lst-card-data-out-23" aria-hidden="true" tabindex="-1"></a>admin card</span>
+<span id="lst-card-data-out-24"><a href="#lst-card-data-out-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-25"><a href="#lst-card-data-out-25" aria-hidden="true" tabindex="-1"></a>Sector 1 username</span>
+<span id="lst-card-data-out-26"><a href="#lst-card-data-out-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-27"><a href="#lst-card-data-out-27" aria-hidden="true" tabindex="-1"></a>68657861636F6E5F61646D696E000000</span>
+<span id="lst-card-data-out-28"><a href="#lst-card-data-out-28" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
+<span id="lst-card-data-out-29"><a href="#lst-card-data-out-29" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
+<span id="lst-card-data-out-30"><a href="#lst-card-data-out-30" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-31"><a href="#lst-card-data-out-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-32"><a href="#lst-card-data-out-32" aria-hidden="true" tabindex="-1"></a>Sector 2 token</span>
+<span id="lst-card-data-out-33"><a href="#lst-card-data-out-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-card-data-out-34"><a href="#lst-card-data-out-34" aria-hidden="true" tabindex="-1"></a>49B0B706DBF13385983D75887C4F1061</span>
+<span id="lst-card-data-out-35"><a href="#lst-card-data-out-35" aria-hidden="true" tabindex="-1"></a>78BB9677F34F57110D1584800037F513</span>
+<span id="lst-card-data-out-36"><a href="#lst-card-data-out-36" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
+<span id="lst-card-data-out-37"><a href="#lst-card-data-out-37" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Even with our slow ninja skills, we now are fast enough to see the success screen!</p>
+<div id="fig-flag" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="flag.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Flag obtained!</figcaption>
+</figure>
+</div>
+<p>We were not fast enough to win the first prize, but we were fast enough to win the second prize, a very cool <a href="https://o.mg.lol/">o.mg.lol</a> cable! Great challenge, very creative way of triggering and using a buffer overflow!</p>
+<div id="fig-prize" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="omg-cable.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: o.mg cable</figcaption>
+</figure>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
