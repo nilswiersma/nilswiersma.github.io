@@ -3,15 +3,13 @@ project:
   output-dir: docs
 
 website:
-  title: "Nils' blog"
-  # navbar:
-  #   left:
-  #     - index.qmd
-  #     - posts.qmd
-  #     - about.qmd
+  site-url: "https://nilswiersma.github.io/"
+  title: "nils.blog"
   sidebar:
-    style: "docked"
+    style: docked
     search: true
+    background: dark
+    collapse-level: 3
     contents:
       - index.qmd
       - section: "Posts"

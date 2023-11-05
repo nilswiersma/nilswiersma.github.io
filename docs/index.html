@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Nils’ blog - Home</title>
+<title>nils.blog - Home</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -59,10 +61,41 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
-</head>
+<link rel="alternate" type="application/rss+xml" title="nils.blog" href="index.xml"></head>
 
 <body class="nav-sidebar docked">
 
@@ -88,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Nils’ blog</a> 
+      <a href="./">nils.blog</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -115,17 +148,17 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">2023</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2023/hexacon23/hexacon23.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Hexacon23 Synacktiv CTF</span></a>
+ <span class="menu-text">Ninja Cards</span></a>
   </div>
 </li>
       </ul>
@@ -144,7 +177,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#recent-posts" id="toc-recent-posts" class="nav-link active" data-scroll-target="#recent-posts">Recent posts</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -167,13 +206,45 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p>Dicta quo sed odio mollitia voluptas eveniet. Officiis eos voluptatem qui. Hic deleniti nulla quam eum mollitia qui voluptas qui. Harum pariatur eligendi necessitatibus optio consequatur facere.</p>
-<p>Ut quaerat ut quia impedit eos voluptatum. Sunt quia deserunt consequuntur consectetur facilis qui laboriosam. Autem nobis quia dolorum consectetur ut quae itaque perspiciatis. Ea vitae asperiores eos dolorem quis nostrum.</p>
-<p>Autem quia aut omnis voluptatem laborum illum molestiae porro. Dignissimos quos voluptatum sit mollitia. Sint sit quo velit cumque inventore sapiente. Omnis libero quis rem nisi sed necessitatibus sit. Quam ad neque repellendus.</p>
-<p>Inventore laudantium distinctio ab rerum vitae totam. Rerum eius porro et consequatur ipsam enim. Nisi ab rerum nihil. Hic id magnam in deleniti deleniti.</p>
+<section id="recent-posts" class="level1">
+<h1>Recent posts</h1>
 
 
 
-</main> <!-- /main -->
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1698184800000" data-listing-file-modified-sort="1699182180976" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14">
+<div class="thumbnail">
+<p><a href="./2023/hexacon23/hexacon23.html"> <img src="./2023/hexacon23/figs/flag.webp" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./2023/hexacon23/hexacon23.html">
+<h3 class="no-anchor listing-title">
+Ninja Cards
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Solution to Synacktiv’s CTF challenge from the 2023 edition of Hexacon.</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./2023/hexacon23/hexacon23.html">
+<div class="listing-date">
+Oct 25, 2023
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

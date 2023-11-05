@@ -1,0 +1,1616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>nils.blog</title>
+<link>https://nilswiersma.github.io/index.html</link>
+<atom:link href="https://nilswiersma.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Tue, 24 Oct 2023 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>Ninja Cards</title>
+  <link>https://nilswiersma.github.io/2023/hexacon23/hexacon23.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="intro" class="level1">
+<h1>Intro</h1>
+<p>At the 2023 edition of <a href="https://www.hexacon.fr/">hexacon</a> there were various CTF challenges, one of which organized at the venue by the event’s organizer, Synacktiv. It involved a smartcard reader attached to small computer and a screen, and a stack of smartcards. The goal of the challenge is to somehow authenticate as admin, which should pop up a specific message on the screen that shows “Waiting for NFC tag…” in Figure&nbsp;1.</p>
+<div id="fig-setup" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://nilswiersma.github.io/2023/hexacon23/figs/setup.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: CTF setup</figcaption>
+</figure>
+</div>
+<p>We grabbed one card from the stack on the bottom left and read it out using <a href="https://f-droid.org/packages/de.syss.MifareClassicTool/">MIFARE Classic Tool</a>. Fortunately it used one of the standard keys included in the application. The dump showed some data in sectors 1, 2 and 3 as shown in Figure&nbsp;2.</p>
+<div id="fig-card" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://nilswiersma.github.io/2023/hexacon23/figs/card.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Card contents</figcaption>
+</figure>
+</div>
+<p>The sectors 1 and 3 contain some interesting strings as shown in Listing&nbsp;1.</p>
+<div id="lst-card1" class="listing">
+<p>Listing&nbsp;1: Data in card</p>
+<div class="sourceCode" id="lst-card1" data-lst-cap="Data in card" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-card1-1">0000  68 65 78 61 63 6f 6e 5f  67 75 65 73 74 00 00 00  |hexacon_guest...|</span>
+<span id="lst-card1-2">0010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-3">*</span>
+<span id="lst-card1-4">0030  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span>
+<span id="lst-card1-5">0040  0b 5f 6a 80 4d ad d1 4b  53 14 58 58 f2 6b 7d f0  |._j.M..KS.XX.k}.|</span>
+<span id="lst-card1-6">0050  ba 62 dd 2f 89 44 0e 14  5c 35 2b db 00 c8 09 0a  |.b./.D..\5+.....|</span>
+<span id="lst-card1-7">0060  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-8">0070  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span>
+<span id="lst-card1-9">0080  68 74 74 70 73 3a 2f 2f  74 69 6e 79 75 72 6c 2e  |https://tinyurl.|</span>
+<span id="lst-card1-10">0090  63 6f 6d 2f 33 6e 76 6d  66 65 61 75 00 00 00 00  |com/3nvmfeau....|</span>
+<span id="lst-card1-11">00a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+<span id="lst-card1-12">00b0  ff ff ff ff ff ff ff 07  80 69 ff ff ff ff ff ff  |.........i......|</span></code></pre></div>
+</div>
+<p>The <a href="https://tinyurl.com/3nvmfeau">URL</a> brings us to a zip archive containing files shown in Listing&nbsp;2. This is a subset of the code running on the small computer, handling the data read from the card’s sectors.</p>
+<div id="lst-archive" class="listing">
+<p>Listing&nbsp;2: Archive contents</p>
+<div class="sourceCode" id="lst-archive" data-lst-cap="Archive contents" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-archive-1">.</span>
+<span id="lst-archive-2">├── README.md</span>
+<span id="lst-archive-3">└─── src</span>
+<span id="lst-archive-4"> &nbsp;&nbsp; ├── include</span>
+<span id="lst-archive-5"> &nbsp;&nbsp; │&nbsp;&nbsp; ├── ipc.h</span>
+<span id="lst-archive-6"> &nbsp;&nbsp; │&nbsp;&nbsp; ├── main.h</span>
+<span id="lst-archive-7"> &nbsp;&nbsp; │&nbsp;&nbsp; ├── nfc.h</span>
+<span id="lst-archive-8"> &nbsp;&nbsp; │&nbsp;&nbsp; └── util.h</span>
+<span id="lst-archive-9"> &nbsp;&nbsp; ├── main.c</span>
+<span id="lst-archive-10"> &nbsp;&nbsp; └── util.c</span></code></pre></div>
+</div>
+<p>The <code>README.md</code> explains the challenge:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1">Dear Hexacon guest,</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">If you read these lines, you probably visited the Synacktiv stand </span>
+<span id="cb1-4">and some ninjas might have briefed you.</span>
+<span id="cb1-5"></span>
+<span id="cb1-6">Otherwise, the goal is to exploit vulnerabilities inside the NFC </span>
+<span id="cb1-7">reader to authenticate successfully as admin.</span>
+<span id="cb1-8"></span>
+<span id="cb1-9">The sources of the challenge are available into the `src/` directory.</span>
+<span id="cb1-10"></span>
+<span id="cb1-11">NB: Some files such as `ipc.c` and `nfc.C` which implement some </span>
+<span id="cb1-12">used functions are not part of the archive, this is intended, as </span>
+<span id="cb1-13">they are not needed to complete the challenge.</span>
+<span id="cb1-14"></span>
+<span id="cb1-15">Have fun ! o/</span></code></pre></div>
+<p>The <code>main</code> (Listing&nbsp;3) of the application, initializes an admin token stored in the filesystem of the machine with <code>get_admin_token</code> and then enters a reading loop. When presented a card, the <code>notify</code> calls update messages on the screen.</p>
+<div id="lst-main" class="listing">
+<p>Listing&nbsp;3: <code>main</code> and <code>get_admin_token</code> functions</p>
+<div class="sourceCode" id="lst-main" data-lst-cap="`main` and `get_admin_token` functions" style="background: #f1f3f5;"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-main-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#include </span><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">"main.h"</span></span>
+<span id="lst-main-2"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#include </span><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">"util.h"</span></span>
+<span id="lst-main-3"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#include </span><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">"nfc.h"</span></span>
+<span id="lst-main-4"></span>
+<span id="lst-main-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">];</span></span>
+<span id="lst-main-6"></span>
+<span id="lst-main-7">context_t context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-8"></span>
+<span id="lst-main-9"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>KEY_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">];</span></span>
+<span id="lst-main-10"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint32_t</span> iterations<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-11"></span>
+<span id="lst-main-12"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> main<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> argc<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>argv<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[])</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-13"></span>
+<span id="lst-main-14">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Retrieve secret</span></span>
+<span id="lst-main-15">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>get_admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-16">        printf<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"[-] Failed to retrieve secret</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-17">        notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>UNEXPECTED_FAIL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-18">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-19">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-20"></span>
+<span id="lst-main-21">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(;;)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-22"></span>
+<span id="lst-main-23">        iterations <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-24"></span>
+<span id="lst-main-25">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Retrieve NFC card username</span></span>
+<span id="lst-main-26">        read_card<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(&amp;</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-27"></span>
+<span id="lst-main-28">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>derive_key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> iterations<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-29">            notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>UNEXPECTED_FAIL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-30">            sleep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-31">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">continue</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-32">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-33"></span>
+<span id="lst-main-34">        status_t status <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> check_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(&amp;</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-35"></span>
+<span id="lst-main-36">        notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>status<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-37"></span>
+<span id="lst-main-38">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>status <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> VALID_TOKEN<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-39">            sleep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-40"></span>
+<span id="lst-main-41">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(!</span>strcmp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> ADMIN_USERNAME<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-42">                notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ADMIN_AUTH<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-43">            <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-44">                notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>GUEST_AUTH<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-45">            <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-46"></span>
+<span id="lst-main-47">            sleep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-48">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-49"></span>
+<span id="lst-main-50">        sleep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-51">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-52"></span>
+<span id="lst-main-53">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-54"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-55"></span>
+<span id="lst-main-56"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> get_admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="lst-main-57"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-58">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">FILE</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> fd<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-59">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">size_t</span> count<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-60">    </span>
+<span id="lst-main-61">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">((</span>fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> fopen<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/admin_token.bin"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"rb"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> NULL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-62">        perror<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fopen"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-63">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-64">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-main-65"></span>
+<span id="lst-main-66">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">((</span>count <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> fread<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> fd<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-main-67">        perror<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fread"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-68">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-69">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> </span>
+<span id="lst-main-70"></span>
+<span id="lst-main-71">    fclose<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>fd<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-main-72"></span>
+<span id="lst-main-73">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-main-74"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="bug-1" class="level1">
+<h1>Bug 1</h1>
+<p><code>read_card</code> (Listing&nbsp;4) moves data from the card’s sectors into the global <code>context</code>. This function contains the first potential vulnerability, as it uses <code>strcpy</code> to move the content from the third sector. This function will keep reading data from the card until a 0-byte is encountered.</p>
+<div id="lst-read-card" class="listing">
+<p>Listing&nbsp;4: <code>read_card</code> function</p>
+<div class="sourceCode" id="lst-read-card" data-lst-cap="`read_card` function" style="background: #f1f3f5;"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-read-card-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">void</span> read_card<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>context_t <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="lst-read-card-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-read-card-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> sectors<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>SECTORS_COUNT <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> BLOCKS_COUNT <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> BLOCK_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">];</span></span>
+<span id="lst-read-card-4"></span>
+<span id="lst-read-card-5">    read_nfc_tag<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>sectors<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-read-card-6"></span>
+<span id="lst-read-card-7">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Read username</span></span>
+<span id="lst-read-card-8">    strncpy<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> read_sector<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>sectors<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">),</span> USERNAME_SIZE <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-read-card-9"></span>
+<span id="lst-read-card-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Read token</span></span>
+<span id="lst-read-card-11">    memcpy<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> read_sector<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>sectors<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">),</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-read-card-12"></span>
+<span id="lst-read-card-13">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Read data</span></span>
+<span id="lst-read-card-14">    strcpy<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> read_sector<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>sectors<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">));</span></span>
+<span id="lst-read-card-15"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
+<p>The <code>data</code> field in the <code>context</code> structure has space for the amount of data (0x30 bytes) of sector 3. <code>context</code> is stored in the globals together with the <code>admin_token</code>, <code>key</code> and <code>iterations</code> (see Listing&nbsp;3). So by overflowing the <code>data</code> field we can overwrite <code>key</code> and <code>iterations</code>. <code>iterations</code> determines the amount of hash iterations are performed in the <code>PKCS5_PKBDF2_HMAC</code> key derivation step in <code>derive_key</code> (see Listing&nbsp;5).</p>
+<div id="lst-derive-key" class="listing">
+<p>Listing&nbsp;5: <code>derive_key</code> function</p>
+<div class="sourceCode" id="lst-derive-key" data-lst-cap="`derive_key` function" style="background: #f1f3f5;"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-derive-key-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> derive_key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint32_t</span> iterations<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="lst-derive-key-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-derive-key-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> PKCS5_PBKDF2_HMAC<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span></span>
+<span id="lst-derive-key-4">        admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// pass</span></span>
+<span id="lst-derive-key-5">        TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// passlen</span></span>
+<span id="lst-derive-key-6">        NULL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// salt</span></span>
+<span id="lst-derive-key-7">        <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// saltlen</span></span>
+<span id="lst-derive-key-8">        iterations<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// iter</span></span>
+<span id="lst-derive-key-9">        EVP_sha256<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(),</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// digest</span></span>
+<span id="lst-derive-key-10">        KEY_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// keylen</span></span>
+<span id="lst-derive-key-11">        key <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// out</span></span>
+<span id="lst-derive-key-12">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-derive-key-13"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
+<p>If we can obtain the <code>admin_token</code>, we can create a card where the <code>username</code> is <code>hexacon_admin</code> and the <code>token</code> is <code>admin_token</code>. This should lead us to the authenticated admin screen.</p>
+<p>In a normal run <code>iterations</code> is set to <code>1000</code> (see Listing&nbsp;3), which is not very high for a proper key derivation system. So it could be that <code>admin_token</code> is some brute-forcible string that could be found in a wordlist, as the <code>salt</code> input is set to <code>NULL</code>. With the overflow we could change the amount of iterations to <code>1</code>, so then just a single <code>SHA256</code> hash is calculated over the password. However it is more likely that the designer of the challenge just put a random <code>0x20</code> byte string in there. In this case even bruteforcing a single 256-bit hash is not feasible.</p>
+<p>We considered setting <code>iterations</code> to <code>0</code>, so that perhaps no hash is calculated at all. This case is normaly caught by the <a href="https://www.openssl.org/docs/manmaster/man3/PKCS5_PBKDF2_HMAC.html">OpenSSL implementation</a> that was likely used, looking at the function signature. So this would not work either.</p>
+<p>In the <code>compute_token</code> function (Listing&nbsp;6), the <code>key[]</code> array, resulting from <code>derive_key</code> function, is used to perform authentication by XORing it with the <code>SHA256</code> hash of the provided <code>username</code>, stored in sector 1 of the card.</p>
+<div id="lst-compute-token" class="listing">
+<p>Listing&nbsp;6: <code>compute_token</code> and <code>check_token</code> functions</p>
+<div class="sourceCode" id="lst-compute-token" data-lst-cap="`compute_token` and `check_token` functions" style="background: #f1f3f5;"><pre class="sourceCode C code-with-copy"><code class="sourceCode c"><span id="lst-compute-token-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> compute_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>context_t <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="lst-compute-token-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> to_sign<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>USERNAME_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{};</span></span>
+<span id="lst-compute-token-4"></span>
+<span id="lst-compute-token-5">    memcpy<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>to_sign<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> USERNAME_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-compute-token-6"></span>
+<span id="lst-compute-token-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>SHA256<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>to_sign<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> strlen<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">),</span> token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> NULL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-8">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-9">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-10"></span>
+<span id="lst-compute-token-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> i <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span> i <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span> i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">++)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-12">        token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^=</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">];</span></span>
+<span id="lst-compute-token-13">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-14"></span>
+<span id="lst-compute-token-15">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-16"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-17"></span>
+<span id="lst-compute-token-18">status_t check_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>context_t <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="lst-compute-token-19"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-20">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(!</span>strcmp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> ADMIN_USERNAME<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-21">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Admin authentication</span></span>
+<span id="lst-compute-token-22">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>memcmp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-23">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> INVALID_TOKEN<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-24">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-25">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-26">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Regular guest authentication</span></span>
+<span id="lst-compute-token-27">        </span>
+<span id="lst-compute-token-28">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// Read card with token to check authenticity</span></span>
+<span id="lst-compute-token-29">        read_card<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="lst-compute-token-30"></span>
+<span id="lst-compute-token-31">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">uint8_t</span> expected_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{};</span></span>
+<span id="lst-compute-token-32"></span>
+<span id="lst-compute-token-33">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>compute_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> expected_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-34">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> UNEXPECTED_FAIL<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-35">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-36"></span>
+<span id="lst-compute-token-37">        <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#ifdef DEBUG</span></span>
+<span id="lst-compute-token-38">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="lst-compute-token-39">        <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">#endif</span></span>
+<span id="lst-compute-token-40"></span>
+<span id="lst-compute-token-41">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>memcmp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ctx<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span>token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> expected_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> TOKEN_SIZE<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="lst-compute-token-42">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> INVALID_TOKEN<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-43">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-44">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="lst-compute-token-45"></span>
+<span id="lst-compute-token-46">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> VALID_TOKEN<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span>
+<span id="lst-compute-token-47"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</div>
+<p>The unmodified card passes the token checks as guest, as shown on the screen, so we know that the token in sector 2 matches the username in sector 3. Therefore, we can calculate the value of <code>key</code> by simply XORing it with the hash of the <code>username</code> from sector 1 as shown below.</p>
+<div id="lst-token-check" class="listing">
+<p>Listing&nbsp;7: Code to recover authentication key</p>
+<div class="sourceCode" id="lst-token-check" data-lst-cap="Code to recover authentication key" style="background: #f1f3f5;"><pre class="sourceCode Python code-with-copy"><code class="sourceCode python"><span id="lst-token-check-1">token <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>.fromhex(</span>
+<span id="lst-token-check-2">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'0B5F6A804DADD14B53145858F26B7DF0BA62DD2F89440E145C352BDB00C8090A'</span>)</span>
+<span id="lst-token-check-3">key <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>(a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span> b <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> a, b <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(token, sha256(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'hexacon_guest'</span>).digest()))</span>
+<span id="lst-token-check-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>key<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>)</span>
+<span id="lst-token-check-5"></span>
+<span id="lst-token-check-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># '78eae65a206ad5631fc11748edeb2f84a01723b32c7b9adbe1a6311f207ea2bf' </span></span></code></pre></div>
+</div>
+<p>We can now forge tokens for any <code>username</code>, including <code>hexacon_admin</code>, which should pop up the <code>notify(ADMIN_AUTH)</code>. However, if we set <code>username</code> like this, the <code>check_token</code> function (Listing&nbsp;6) will take a different path where it compares against the <code>admin_token</code>, which we still don’t know, and also cannot reach with the <code>strcpy</code> overflow.</p>
+</section>
+<section id="bug-2" class="level1">
+<h1>Bug 2</h1>
+<p>Then we noticed the application reads a second time from the card while in the non-admin branch of <code>check_token</code>, which will refill the global <code>context</code> structure. This means the application contains a <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">TOCTOU</a> type vulnerability where some checks are performed on one copy of the data, and then performs actions based on another copy of the data. Namely, the check on <code>username</code> to reach the right branch is performed on the first copy from the card, while the check in the <code>main</code> loop, which determines which final message we reach, is performed on the second read. So if we can switch the <code>username</code> portion of the card’s data fast enough, we can reach the right branch in <code>check_token</code> while setting the username to <code>hexacon_admin</code> and triggering the <code>notify(ADMIN_AUTH)</code>. With something like a <a href="https://github.com/Proxmark/proxmark3">Proxmark</a> or a <a href="https://docs.flipper.net/nfc/read">Flipper Zero</a> it’s probably possible to switch between card data fast enough. Alternatively, we could simply use two cards, write the different <code>username</code>s with matching <code>token</code>s, and switch them in between reads, if we are fast enough. However, our ninja skills were fast enough :(</p>
+</section>
+<section id="ninja-skills" class="level1">
+<h1>Ninja skills</h1>
+<p>Recall the <code>iterations</code> variable that we could overwrite with the overflow. This determines the amount of times the pseudorandom function (<code>HMAC</code> in this case) is applied on the potentially weak password input in the <code>PBKDF2_HMAC</code> function. Setting this value really high, rather than really low, also means more computation time is needed in the application reading the cards. Furthermore, this calculation is performed between the two card reads, so this might give us enough time to manually switch between two cards.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> main<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">int</span> argc<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">char</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>argv<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[])</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-2">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb2-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(;;)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-4">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb2-5">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// v- first card read</span></span>
+<span id="cb2-6">        read_card<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(&amp;</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span> </span>
+<span id="cb2-7"></span>
+<span id="cb2-8">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// v- PBKDF in here</span></span>
+<span id="cb2-9">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>derive_key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> iterations<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> </span>
+<span id="cb2-10">            <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">...</span> </span>
+<span id="cb2-11">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-12">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">// v- second card read in here</span></span>
+<span id="cb2-13">        status_t status <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> check_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(&amp;</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> admin_token<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> key<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span> </span>
+<span id="cb2-14">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb2-15">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>status <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> VALID_TOKEN<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-16">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(!</span>strcmp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>context<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> ADMIN_USERNAME<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">))</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-17">                notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>ADMIN_AUTH<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="cb2-18">            <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-19">                notify<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span>GUEST_AUTH<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">);</span></span>
+<span id="cb2-20">            <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-21">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-22">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-23"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+<p>We now need to set up two cards in the following way to combine both the buffer overflow and the TOCTOU bugs:</p>
+<ul>
+<li>One card will contain any <code>username</code> string in sector 1 that is not <code>hexacon_admin</code>. This card needs to trigger the overflow to overwrite <code>iterations</code>. By doing this, it will also overwrite <code>key[]</code>, so we need to replace the <code>token</code> in sector 2 such that it matches with the overwritten <code>key[]</code>. Due to the offsets, the last 0x10 bytes of sector 3 will end up in <code>key[]</code> which contain some special values. The function <code>read_nfc_tag</code> from <code>nfc.h</code> warns us that “<em>the NFC tag A key MUST be ”FFFFFFFFFFFF”</em>”, which refers to to the light green portion of Figure&nbsp;2. We just left all those bytes as they were, so we recalculated the <code>token</code> as shown in Listing&nbsp;7, i.e.&nbsp;<code>token = sha256(username) ^ key</code>. The first 0x10 bytes of sector 4 will be the second half of the key, we just filled this with 0xff-bytes. Then the following 4 bytes of sector 4 can be used to control the <code>iterations</code> variable to something large like <code>0xffffffff</code>.</li>
+<li>The second card will contain the <code>hexacon_admin</code> string in the <code>username</code>’s sector 1. This card will need also a valid token matching the previously overwritten <code>key[]</code>, which is generated following the same <code>token = sha256(username) ^ key</code> calculation.</li>
+</ul>
+<p>By presenting first the guest card, and then swapping to the admin card while the <code>PBKDF2_HMAC</code> calculation is working, we should land on the <code>notify(ADMIN_AUTH)</code> page.</p>
+<p>The Python script in Listing&nbsp;8 generates the data for both cards’ sectors. Listing&nbsp;9 shows the data for the relevant card sectors.</p>
+<div id="lst-card-data" class="listing">
+<p>Listing&nbsp;8: Code to generate the card data that exploits the vulnerabilities</p>
+<div class="sourceCode" id="lst-card-data" data-lst-cap="Code to generate the card data that exploits the vulnerabilities" style="background: #f1f3f5;"><pre class="sourceCode Python code-with-copy"><code class="sourceCode python"><span id="lst-card-data-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> hashlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sha256</span>
+<span id="lst-card-data-2"></span>
+<span id="lst-card-data-3">key_suffix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'FFFFFFFFFFFFFF078069FFFFFFFFFFFF'</span></span>
+<span id="lst-card-data-4"></span>
+<span id="lst-card-data-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate original key, output of pbkdf with unknown password </span></span>
+<span id="lst-card-data-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># and empty salt</span></span>
+<span id="lst-card-data-7">token1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> sha256(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'hexacon_guest'</span>).digest()</span>
+<span id="lst-card-data-8">token2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>.fromhex(</span>
+<span id="lst-card-data-9">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'0B5F6A804DADD14B53145858F26B7DF0BA62DD2F89440E145C352BDB00C8090A'</span>)</span>
+<span id="lst-card-data-10">key <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>(a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span> b <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> a, b <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(token1, token2))</span>
+<span id="lst-card-data-11"></span>
+<span id="lst-card-data-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate data for first card with hexacon_guest username</span></span>
+<span id="lst-card-data-13">token3 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> sha256(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'hexacon_guest'</span>).digest()</span>
+<span id="lst-card-data-14">key2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>.fromhex(key_suffix) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\xff</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0x10</span></span>
+<span id="lst-card-data-15">token4 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>(a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span> b <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> a, b <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(token3, key2))</span>
+<span id="lst-card-data-16"></span>
+<span id="lst-card-data-17"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'guest card'</span>)</span>
+<span id="lst-card-data-18"></span>
+<span id="lst-card-data-19"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-20"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sector 2 token'</span>)</span>
+<span id="lst-card-data-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-22"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(token4[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-23"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(token4[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>:].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-24"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="lst-card-data-25"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(key_suffix)</span>
+<span id="lst-card-data-26"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-27"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sector 3 data'</span>)</span>
+<span id="lst-card-data-28"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-29"></span>
+<span id="lst-card-data-30"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>((<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'A'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0x10</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-31"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>((<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'A'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0x10</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-32"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>((<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'A'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0x10</span>).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-33"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(key_suffix)</span>
+<span id="lst-card-data-34"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-35"></span>
+<span id="lst-card-data-36"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sector 4 overflow'</span>)</span>
+<span id="lst-card-data-37"></span>
+<span id="lst-card-data-38"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'FF'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Second half of key</span></span>
+<span id="lst-card-data-39"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'FF'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># iterations value</span></span>
+<span id="lst-card-data-40"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="lst-card-data-41"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(key_suffix)</span>
+<span id="lst-card-data-42"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-43"></span>
+<span id="lst-card-data-44"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'admin card'</span>)</span>
+<span id="lst-card-data-45"></span>
+<span id="lst-card-data-46">token5 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> sha256(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'hexacon_admin'</span>).digest()</span>
+<span id="lst-card-data-47">key2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>.fromhex(key_suffix) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\xff</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0x10</span></span>
+<span id="lst-card-data-48">token6 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">bytes</span>(a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span> b <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> a, b <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(token5, key2))</span>
+<span id="lst-card-data-49"></span>
+<span id="lst-card-data-50"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-51"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sector 1 username'</span>)</span>
+<span id="lst-card-data-52"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-53"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">b'hexacon_admin'</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="lst-card-data-54"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="lst-card-data-55"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="lst-card-data-56"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(key_suffix)</span>
+<span id="lst-card-data-57"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-58"></span>
+<span id="lst-card-data-59"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sector 2 token'</span>)</span>
+<span id="lst-card-data-60"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span>
+<span id="lst-card-data-61"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(token6[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-62"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(token6[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>:].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hex</span>().upper())</span>
+<span id="lst-card-data-63"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'00'</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="lst-card-data-64"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(key_suffix)</span>
+<span id="lst-card-data-65"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>()</span></code></pre></div>
+</div>
+<div id="lst-card-data-out" class="listing">
+<p>Listing&nbsp;9: Data for both cards</p>
+<div class="sourceCode" id="lst-card-data-out" data-lst-cap="Data for both cards" style="background: #f1f3f5;"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="lst-card-data-out-1">guest card</span>
+<span id="lst-card-data-out-2"></span>
+<span id="lst-card-data-out-3">Sector 2 token</span>
+<span id="lst-card-data-out-4"></span>
+<span id="lst-card-data-out-5">8C4A73259238FB2FCCBCB0EFE07FAD8B</span>
+<span id="lst-card-data-out-6">E58A01635AC06B30426CE53BDF49544A</span>
+<span id="lst-card-data-out-7">00000000000000000000000000000000</span>
+<span id="lst-card-data-out-8">FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-9"></span>
+<span id="lst-card-data-out-10">Sector 3 data</span>
+<span id="lst-card-data-out-11"></span>
+<span id="lst-card-data-out-12">41414141414141414141414141414141</span>
+<span id="lst-card-data-out-13">41414141414141414141414141414141</span>
+<span id="lst-card-data-out-14">41414141414141414141414141414141</span>
+<span id="lst-card-data-out-15">FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-16"></span>
+<span id="lst-card-data-out-17">Sector 4 overflow</span>
+<span id="lst-card-data-out-18">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>
+<span id="lst-card-data-out-19">FFFFFFFF000000000000000000000000</span>
+<span id="lst-card-data-out-20">00000000000000000000000000000000</span>
+<span id="lst-card-data-out-21">FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-22"></span>
+<span id="lst-card-data-out-23">admin card</span>
+<span id="lst-card-data-out-24"></span>
+<span id="lst-card-data-out-25">Sector 1 username</span>
+<span id="lst-card-data-out-26"></span>
+<span id="lst-card-data-out-27">68657861636F6E5F61646D696E000000</span>
+<span id="lst-card-data-out-28">00000000000000000000000000000000</span>
+<span id="lst-card-data-out-29">00000000000000000000000000000000</span>
+<span id="lst-card-data-out-30">FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span>
+<span id="lst-card-data-out-31"></span>
+<span id="lst-card-data-out-32">Sector 2 token</span>
+<span id="lst-card-data-out-33"></span>
+<span id="lst-card-data-out-34">49B0B706DBF13385983D75887C4F1061</span>
+<span id="lst-card-data-out-35">78BB9677F34F57110D1584800037F513</span>
+<span id="lst-card-data-out-36">00000000000000000000000000000000</span>
+<span id="lst-card-data-out-37">FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span></code></pre></div>
+</div>
+</section>
+<section id="success" class="level1">
+<h1>Success!</h1>
+<p>Even with our slow ninja skills, we now are fast enough to see the success screen!</p>
+<div id="fig-flag" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://nilswiersma.github.io/2023/hexacon23/figs/flag.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Flag obtained!</figcaption>
+</figure>
+</div>
+<p>We were not fast enough to win the first prize, but we were fast enough to win the second prize, a very cool <a href="https://o.mg.lol/">o.mg.lol</a> cable! Great challenge, very creative way of triggering and using a buffer overflow!</p>
+<div id="fig-prize" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://nilswiersma.github.io/2023/hexacon23/figs/omg-cable.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: o.mg cable</figcaption>
+</figure>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://nilswiersma.github.io/2023/hexacon23/hexacon23.html</guid>
+  <pubDate>Tue, 24 Oct 2023 22:00:00 GMT</pubDate>
+  <media:content url="https://nilswiersma.github.io/2023/hexacon23/figs/flag.webp" medium="image" type="image/webp"/>
+</item>
+</channel>
+</rss>

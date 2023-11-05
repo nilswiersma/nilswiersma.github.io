@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2023-10-25">
 
-<title>Nils’ blog - Hexacon23 Synacktiv CTF</title>
+<title>nils.blog - Ninja Cards</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Posts</li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">2023</a></li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">Hexacon23 Synacktiv CTF</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Posts</li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">2023</a></li><li class="breadcrumb-item"><a href="../../2023/hexacon23/hexacon23.html">Ninja Cards</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Nils’ blog</a> 
+      <a href="../../">nils.blog</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -160,7 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../2023/hexacon23/hexacon23.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Hexacon23 Synacktiv CTF</span></a>
+ <span class="menu-text">Ninja Cards</span></a>
   </div>
 </li>
       </ul>
@@ -179,14 +179,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#bug-1" id="toc-bug-1" class="nav-link" data-scroll-target="#bug-1">Bug 1</a></li>
+  <li><a href="#bug-2" id="toc-bug-2" class="nav-link" data-scroll-target="#bug-2">Bug 2</a></li>
+  <li><a href="#ninja-skills" id="toc-ninja-skills" class="nav-link" data-scroll-target="#ninja-skills">Ninja skills</a></li>
+  <li><a href="#success" id="toc-success" class="nav-link" data-scroll-target="#success">Success!</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hexacon23 Synacktiv CTF</h1>
+<h1 class="title">Ninja Cards</h1>
 </div>
 
 
@@ -204,20 +214,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     
   </div>
   
+<div>
+  <div class="abstract">
+    <div class="abstract-title">Abstract</div>
+    Solution to Synacktiv’s CTF challenge from the 2023 edition of Hexacon.
+  </div>
+</div>
 
 </header>
 
+<section id="intro" class="level1">
+<h1>Intro</h1>
 <p>At the 2023 edition of <a href="https://www.hexacon.fr/">hexacon</a> there were various CTF challenges, one of which organized at the venue by the event’s organizer, Synacktiv. It involved a smartcard reader attached to small computer and a screen, and a stack of smartcards. The goal of the challenge is to somehow authenticate as admin, which should pop up a specific message on the screen that shows “Waiting for NFC tag…” in <a href="#fig-setup">Figure&nbsp;1</a>.</p>
 <div id="fig-setup" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="setup.jpg" class="img-fluid figure-img"></p>
+<p><img src="figs/setup.jpg" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Figure&nbsp;1: CTF setup</figcaption>
 </figure>
 </div>
 <p>We grabbed one card from the stack on the bottom left and read it out using <a href="https://f-droid.org/packages/de.syss.MifareClassicTool/">MIFARE Classic Tool</a>. Fortunately it used one of the standard keys included in the application. The dump showed some data in sectors 1, 2 and 3 as shown in <a href="#fig-card">Figure&nbsp;2</a>.</p>
 <div id="fig-card" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="card.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="figs/card.png" class="img-fluid figure-img" style="width:50.0%"></p>
 <figcaption class="figure-caption">Figure&nbsp;2: Card contents</figcaption>
 </figure>
 </div>
@@ -345,6 +363,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="lst-main-73"><a href="#lst-main-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="lst-main-74"><a href="#lst-main-74" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="bug-1" class="level1">
+<h1>Bug 1</h1>
 <p><code>read_card</code> (<a href="#lst-read-card">Listing&nbsp;4</a>) moves data from the card’s sectors into the global <code>context</code>. This function contains the first potential vulnerability, as it uses <code>strcpy</code> to move the content from the third sector. This function will keep reading data from the card until a 0-byte is encountered.</p>
 <div id="lst-read-card" class="listing">
 <p>Listing&nbsp;4: <code>read_card</code> function</p>
@@ -446,7 +467,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="lst-token-check-6"><a href="#lst-token-check-6" aria-hidden="true" tabindex="-1"></a><span class="co"># '78eae65a206ad5631fc11748edeb2f84a01723b32c7b9adbe1a6311f207ea2bf' </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can now forge tokens for any <code>username</code>, including <code>hexacon_admin</code>, which should pop up the <code>notify(ADMIN_AUTH)</code>. However, if we set <code>username</code> like this, the <code>check_token</code> function (<a href="#lst-compute-token">Listing&nbsp;6</a>) will take a different path where it compares against the <code>admin_token</code>, which we still don’t know, and also cannot reach with the <code>strcpy</code> overflow.</p>
+</section>
+<section id="bug-2" class="level1">
+<h1>Bug 2</h1>
 <p>Then we noticed the application reads a second time from the card while in the non-admin branch of <code>check_token</code>, which will refill the global <code>context</code> structure. This means the application contains a <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">TOCTOU</a> type vulnerability where some checks are performed on one copy of the data, and then performs actions based on another copy of the data. Namely, the check on <code>username</code> to reach the right branch is performed on the first copy from the card, while the check in the <code>main</code> loop, which determines which final message we reach, is performed on the second read. So if we can switch the <code>username</code> portion of the card’s data fast enough, we can reach the right branch in <code>check_token</code> while setting the username to <code>hexacon_admin</code> and triggering the <code>notify(ADMIN_AUTH)</code>. With something like a <a href="https://github.com/Proxmark/proxmark3">Proxmark</a> or a <a href="https://docs.flipper.net/nfc/read">Flipper Zero</a> it’s probably possible to switch between card data fast enough. Alternatively, we could simply use two cards, write the different <code>username</code>s with matching <code>token</code>s, and switch them in between reads, if we are fast enough. However, our ninja skills were fast enough :(</p>
+</section>
+<section id="ninja-skills" class="level1">
+<h1>Ninja skills</h1>
 <p>Recall the <code>iterations</code> variable that we could overwrite with the overflow. This determines the amount of times the pseudorandom function (<code>HMAC</code> in this case) is applied on the potentially weak password input in the <code>PBKDF2_HMAC</code> function. Setting this value really high, rather than really low, also means more computation time is needed in the application reading the cards. Furthermore, this calculation is performed between the two card reads, so this might give us enough time to manually switch between two cards.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
@@ -586,22 +613,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="lst-card-data-out-36"><a href="#lst-card-data-out-36" aria-hidden="true" tabindex="-1"></a>00000000000000000000000000000000</span>
 <span id="lst-card-data-out-37"><a href="#lst-card-data-out-37" aria-hidden="true" tabindex="-1"></a>FFFFFFFFFFFFFF078069FFFFFFFFFFFF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="success" class="level1">
+<h1>Success!</h1>
 <p>Even with our slow ninja skills, we now are fast enough to see the success screen!</p>
 <div id="fig-flag" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="flag.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="figs/flag.webp" class="img-fluid figure-img" style="width:50.0%"></p>
 <figcaption class="figure-caption">Figure&nbsp;3: Flag obtained!</figcaption>
 </figure>
 </div>
 <p>We were not fast enough to win the first prize, but we were fast enough to win the second prize, a very cool <a href="https://o.mg.lol/">o.mg.lol</a> cable! Great challenge, very creative way of triggering and using a buffer overflow!</p>
 <div id="fig-prize" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="omg-cable.webp" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="figs/omg-cable.webp" class="img-fluid figure-img" style="width:50.0%"></p>
 <figcaption class="figure-caption">Figure&nbsp;4: o.mg cable</figcaption>
 </figure>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

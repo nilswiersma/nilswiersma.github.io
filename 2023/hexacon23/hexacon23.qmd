@@ -1,21 +1,25 @@
 ---
-title: "Hexacon23 Synacktiv CTF"
+title: "Ninja Cards"
+abstract: "Solution to Synacktiv's CTF challenge from the 2023 edition of Hexacon."
+image: figs/flag.webp
 date: 2023-10-25
 
 ---
+
+# Intro
 
 At the 2023 edition of [hexacon](https://www.hexacon.fr/) there were various CTF challenges, one of which organized at the venue by the event's organizer, Synacktiv. 
 It involved a smartcard reader attached to small computer and a screen, and a stack of smartcards.
 The goal of the challenge is to somehow authenticate as admin, which should pop up a specific message on the screen that shows "Waiting for NFC tag..." in @fig-setup.
 
-![CTF setup](setup.jpg){#fig-setup}
+![CTF setup](figs/setup.jpg){#fig-setup}
 
 
 We grabbed one card from the stack on the bottom left and read it out using [MIFARE Classic Tool](https://f-droid.org/packages/de.syss.MifareClassicTool/).
 Fortunately it used one of the standard keys included in the application.
 The dump showed some data in sectors 1, 2 and 3 as shown in @fig-card.
 
-![Card contents](card.png){width=50% #fig-card}
+![Card contents](figs/card.png){width=50% #fig-card}
 
 The sectors 1 and 3 contain some interesting strings as shown in @lst-card1.
 
@@ -150,6 +154,8 @@ int get_admin_token(char * admin_token)
 }
 ```
 
+# Bug 1
+
 `read_card` (@lst-read-card) moves data from the card's sectors into the global `context`.
 This function contains the first potential vulnerability, as it uses `strcpy` to move the content from the third sector. This function will keep reading data from the card until a 0-byte is encountered.
 
@@ -272,6 +278,8 @@ print(f'{key.hex()}')
 We can now forge tokens for any `username`, including `hexacon_admin`, which should pop up the `notify(ADMIN_AUTH)`.
 However, if we set `username` like this, the `check_token` function (@lst-compute-token) will take a different path where it compares against the `admin_token`, which we still don't know, and also cannot reach with the `strcpy` overflow.
 
+# Bug 2
+
 Then we noticed the application reads a second time from the card while in the non-admin branch of `check_token`, which will refill the global `context` structure.
 This means the application contains a [TOCTOU](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use) type vulnerability where some checks are performed on one copy of the data, and then performs actions based on another copy of the data.
 Namely, the check on `username` to reach the right branch is performed on the first copy from the card, while the check in the `main` loop, which determines which final message we reach, is performed on the second read.
@@ -279,6 +287,8 @@ So if we can switch the `username` portion of the card's data fast enough, we ca
 With something like a [Proxmark](https://github.com/Proxmark/proxmark3) or a [Flipper Zero](https://docs.flipper.net/nfc/read) it's probably possible to switch between card data fast enough.
 Alternatively, we could simply use two cards, write the different `username`s with matching `token`s, and switch them in between reads, if we are fast enough.
 However, our ninja skills were fast enough :(
+
+# Ninja skills
 
 Recall the `iterations` variable that we could overwrite with the overflow.
 This determines the amount of times the pseudorandom function (`HMAC` in this case) is applied on the potentially weak password input in the `PBKDF2_HMAC` function.
@@ -435,12 +445,14 @@ Sector 2 token
 FFFFFFFFFFFFFF078069FFFFFFFFFFFF
 ```
 
+# Success!
+
 Even with our slow ninja skills, we now are fast enough to see the success screen!
 
-![Flag obtained!](flag.webp){#fig-flag width=50%}
+![Flag obtained!](figs/flag.webp){#fig-flag width=50%}
 
 
 We were not fast enough to win the first prize, but we were fast enough to win the second prize, a very cool [o.mg.lol](https://o.mg.lol/) cable!
 Great challenge, very creative way of triggering and using a buffer overflow!
 
-![o.mg cable](omg-cable.webp){#fig-prize width=50%}
+![o.mg cable](figs/omg-cable.webp){#fig-prize width=50%}
