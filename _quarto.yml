@@ -4,7 +4,7 @@ project:
 
 website:
   site-url: "https://nilswiersma.github.io/"
-  title: "nils.blog"
+  title: "nilswiersma.github.io"
   sidebar:
     style: docked
     search: true
@@ -17,6 +17,9 @@ website:
           - section: "2023"
             contents:
               - 2023/hexacon23/hexacon23.qmd
+          - section: "2024"
+            contents:
+              - 2024/sergei23/sergei23.qmd
       - about.qmd
 
 format:

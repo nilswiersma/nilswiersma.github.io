@@ -1,0 +1,436 @@
+---
+title: Sergei's Mystery Block
+abstract: Cheap solutions to side-channel your way to whiskey!
+image: figs/epoxy.jpg
+date: 2024-04-13
+---
+
+# Intro
+
+My friend Sergei got creative and this mysterious block of transparent epoxy. What could be inside?
+
+![Mystery block](figs/epoxy.jpg){#fig-mystery-block width="75%"}
+
+Inside we see a [Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#raspberry-pi-pico-w-and-pico-wh), a thicc capacitor from VSYS to GND, a coil hovering over the RP2040 connecting a GPIO to GND, and some kind of glass tube connecting 3V3(OUT) to another GPIO. There are four legs that expose VSYS, GND, and two more GPIOs.
+
+How can the Pico talk to us, and how can we talk back?
+Since it's the W version, it can talk WiFi and Bluetooth; the two GPIOs can be used for something with two wires like UART or I2C; there is the built-in LED next to the micro USB port that might react to something; there's the big coil that might be able to send or receive electromagnetic signals; and finally there is the glass tube that surely is used for something.
+
+# Wired {#sec-wired}
+
+Let's start with the two GPIOs.
+A good first guess is that these are used as TX and RX pins for a UART interface with a 115200 baudrate. 
+To test this I hooked them up to an FTD1232 UART \<-\> USB adapter, and after swapping the RX and TX pins back and forth three times, the folling shows up in `picocom`:
+
+``` default
+*********************************************************************
+**************************The last CTF*******************************
+*********************************************************************
+
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+Connecting online...
+I just want to be in the office... Try again!
+Connecting online...
+Connecting online...
+```
+
+It keeps repeating that message forever.
+It seems to be looking for some kind of office network?
+
+# Wireless {#sec-wireless}
+
+The message that shows up on the [wired](#sec-wired) interface suggests it uses the Wifi module to talk to the internet. 
+There's a good chance it tries to talk to Riscure's guest network.
+After some [fiddling](https://www.markloveless.net/blog/2020/7/7/my-mitmsniffing-station) with network configuration on my laptop, the following sets up a wireless network with that SSID, and forwards the wired network so that it can go online, while also making it possible to transparantly monitor what is going on with [mitmproxy]():
+
+``` bash
+# Use nmcli to setup a hotspot
+nmcli dev wifi hotspot ifname wlp61s0 ssid "Riscure Guests" password "internet4you"
+
+# Configure internet and mitmproxy
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding=1
+sysctl -w net.ipv4.conf.all.send_redirects=0
+
+iptables -t nat -A PREROUTING -i wlp61s0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables -t nat -A PREROUTING -i wlp61s0 -p tcp --dport 443 -j REDIRECT --to-port 8080
+ip6tables -t nat -A PREROUTING -i wlp61s0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+ip6tables -t nat -A PREROUTING -i wlp61s0 -p tcp --dport 443 -j REDIRECT --to-port 8080
+
+# Start mitmproxy
+mitmproxy --mode transparent --showhost
+```
+
+The Pico shows up in the hotspot's network:
+
+``` default
+$ arp
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.42.0.42               ether   28:cd:c1:0a:e3:9f   C                     wlp61s0
+...
+```
+
+And the following shows up on the UART output:
+
+``` default
+...
+Connecting online...
+Connected
+Updating current time...
+Welcome! Curent time: 2023-10-30 19:57:39 . Have you thought how much time you wasted solving this?
+I chose a number.
+What number is it?
+> �
+```
+
+A single request goes to [http://just-the-time.appspot.com/](). 
+To catch the response with mitmproxy, configure an intercept filter (`i`) to catch all responses (`~s`). 
+When the response shows up in the flow, navigate to it, edit (`e`) the response_body (`b`), press `q` to go back and `a` to send it. 
+
+Knowing the URL it fetches from, we can also set up the local DNS service such that the [](appspot.com) domain goes to `127.0.0.1` instead:
+
+``` default
+$ cat /etc/hosts
+127.0.0.1       just-the-time.appspot.com
+```
+
+``` default
+$ cat /etc/NetworkManager/dnsmasq-shared.d/hosts.conf
+address=/.com/10.42.0.1
+```
+
+Once set up, run `sudo systemctl reload NetworkManager.service` to reload the config.
+
+Now we can host our own reply server and don't have to man-in-the-middle it anymore. This can be done with a simple Python script:
+
+``` python
+import http.server
+
+class VerboseHTTPServer(http.server.HTTPServer):
+    def __init__(self, server_address, RequestHandlerClass):
+        super().__init__(server_address, RequestHandlerClass)
+        self.RequestHandlerClass.server_version = "VerboseHTTP/1.0"
+
+    def get_request(self):
+        client, client_address = super().get_request()
+        print(f"Received request from {client_address[0]}")
+        return client, client_address
+
+class VerboseHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'AAAAAAAAAAAAAAAAAAAAAAA')
+
+if __name__ == '__main__':
+    try:
+        server = VerboseHTTPServer(('0.0.0.0', 80), VerboseHandler)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print('Server stopped.')
+```
+
+# Choosing a number
+
+Back to the wired communication.
+
+```Default
+What number is it?
+> 
+```
+
+Inputting numbers gives a reply `Try again..`, inputting something non-numeric gives `NaN`.
+Prefixing a hexadecimal number with `0x` seems to make it accept it as a number as well, as there is no `NaN` reply.
+The same holds true for prefixing a binary number with `0b`.
+
+For some reason there is a short pulse on the UART lines that gets intepreted as a `0xfe` byte, which is the non-printable � shown below.
+This byte did not seem to have any meaning.
+It does make it such as that the first input always results in the `NaN` response, as it cannot parse the input string containing this byte into a number.
+
+```Default
+What number is it?
+> �1
+
+NaN
+I chose a number.
+What number is it?
+> 1
+Try again..
+I chose a number.
+What number is it?
+> 
+
+NaN
+```
+
+My first guess was that the value fetched from [just-the-time.appspot.com]() is used as some kind of seed for the number to be input.
+Knowing Sergei, and the fact that `0x` and `0b` strings also get parsed into numbers, he probably used [MicroPython](https://docs.micropython.org/en/latest/) to implement this.
+So I took a look at how random number generation is implemented there, and the [seed can be set](https://docs.micropython.org/en/latest/library/random.html#other-functions).
+Unfortunately, unlike normal Python's [`seed` function](https://docs.python.org/3/library/random.html#random.seed), MicroPython's seed function does not accept any arbitrary string, only a number.
+There is a sytem in MicroPython's [`time`](https://docs.micropython.org/en/latest/library/time.html#time.mktime) implementation to go from a tuple of date information to a timestamp, so perhaps this is how the time string is converted into a number.
+I tried setting the string to `1970-01-01 00:00:00` to make this potential seed 0.
+
+The next question is how this number might be generated.
+I could not find any hint or suggestion as to how, so I tried a few things on a second Pico running MicroPython as well.
+I tried generating values of various bit-length using [`getrandbits`](https://docs.micropython.org/en/latest/library/random.html#random.getrandbits), and various ranges using [`randint`](https://docs.micropython.org/en/latest/library/random.html#random.randint).
+None of this resulted in a number that gives a different reply.
+
+Since the output very explicitly says `I chose a number`, maybe `random.choice` is used?
+Maybe by chosing a random value from the string returned by the GET request.
+I tried returning `AAAAAAA` as the date string, and providing `0x41` as number input.
+This, again, did not result in any different reply either.
+
+# The hovering coil
+
+Next I took a look at the coil suspiciously hanging over the RP2040.
+Perhaps it provides some [side-channel information](https://en.wikipedia.org/wiki/Side-channel_attack) about what is going on?
+
+At home I have a small Picoscope 2204A (10MS/s, 8kS memory).
+If there is some electromagnetic signal coming from the coil, it might be possible to pick it up by holding a short piece of turned wire over it, connected to one of the Picoscope probes.
+The result of this budget setup is shown in @fig-coil-3; the piece of blue wire is the improvised measurement coil.
+
+![Budget EM measurement](figs/coil-on-coil-3.jpg){#fig-coil-3 width="80%"}
+
+This very simple setup seems good enough to show that there is something going on between the messages `Try again...` and `I chose a number`, as shown in @fig-coil-1.
+This looks suspiciously like the [classic RSA simple power analysis example](https://en.wikipedia.org/wiki/Side-channel_attack#/media/File:Power_attack.png), where depending on whether a bit in the private key is 1 or 0, the operation of the algorithm that depends on the value of that bit leaks information through power consumption for a longer or shorted time, respectively.
+
+![EM activity!](figs/coil-on-coil-1.png){#fig-coil-1}
+
+So if the longer blocks in @fig-coil-1 mean a 1, and shorter blocks mean a 0, perhaps the number is `0b1101100111000100011010`, which is 3567898 in decimal.
+
+```Default
+...
+> 3567898
+Finally!
+
+You have guessed the number correctly!
+...
+```
+
+```Default
+...
+> 0b0b1101100111000100011010
+Finally!
+
+You have guessed the number correctly!
+...
+```
+
+Either way provides us with the `You have guessed the number correctly!` reply!
+Next, we are presented with the following password input question:
+
+```Default
+You have guessed the number correctly!
+Enter password to authenticate:
+> 
+```
+
+# The glass tube
+
+So far we have not looked at the glass tube yet.
+It is connected between the Pico's 3V3 output, and a GPIO, so it probably makes the GPIO read 1 or 0.
+@fig-reed shows a closer up picture of the thing.
+
+![Magnetic reed switch](figs/mystery-tube-0002.jpg){#fig-reed width="75%"}
+
+After some reverse image searching on Google, I found a forum post where they mentioned that this is called a [reed switch](https://en.wikipedia.org/wiki/Reed_switch). 
+These are switches that get pulled together (or apart) when a magnetic field is nearby. 
+Using my cheap TODO microscope, you can see in @fig-reed2 that indeed, when you hold a magnet nearby, the two plates come together.
+
+![Reed switch with magnet](figs/mystery-tube.gif){#fig-reed2 width="75%"}
+
+Powering the board while holding a magnet holding next to the switch adds some extra output!
+However, holding it there too long however triggers the second line as shown below, claiming a reboot.^[But it does not actually reboot, just hang :(]
+
+```Default
+...
+***Hint***	Holdnig the magnet can give you hints sometimes	***Hint***
+Magnet sensor is triggered. Rebooting..
+```
+
+There also is a hint for the number guessing, but at this point we already figured that one out.
+<!-- I learned later that the misspelling in "langer" is a hint that you could use a [langer probe](https://www.langer-emv.de/en/product/lf-passive-100-khz-up-to-50-mhz/36/lf1-set-near-field-probes-100-khz-up-to-50-mhz/267) to measure the EM signal. -->
+
+```Default
+***Hint***	Guess it! I cannot wait any langer	***Hint***
+I chose a number.
+What number is it?
+>
+```
+
+Playing around with the magnet around the point where we are now, the password guessing, the following hint pops up:
+
+```Default
+***Hint***	Checking password in a blink of an eye	***Hint***
+Enter password to authenticate:
+> 
+```
+
+While messing with the magnet during this password check, sometimes a different message pops up.
+These all seem to be amazing magnet puns!
+
+```Default
+***Hint***	Did you hear about the magnetic sensor's party? It had a very 
+attractive guest list!	***Hint***
+
+***Hint***	What do you call a magnetic sensor with a great sense of 
+humor? A real 'attract-ion'!	***Hint***
+
+***Hint***	Why did the magnetic sensor apply for a job? Because it 
+wanted to attract success!	***Hint***
+
+***Hint***      What's a magnetic sensor's favorite kind of music? 
+Heavy metal, of course!      ***Hint***
+```
+
+But not useful to where we are now.
+
+Maybe the "blink" refers to the LED?
+
+# Blinky LED
+
+The onboard LED is on when the board is powered on.
+After typing some random inputs for the password, the LED seems to faintly, quickly, turn off and on.
+
+![Blinkyblink](figs/LED.gif){#fig-reed2 width="75%"}
+
+This happens as soon as you send exactly 21 characters.
+I made a script on a second Pico to see if there is any noticable difference in timing between sending the `\r` to send the input, and receiving the first byte from the reply.
+With this I started looking for other lengths that result in different lengths:
+
+```{.Python #lst-script lst-cap="Guess and measure"}
+u = UART(0, baudrate=115200, timeout=2000, rxbuf=1024)
+timings = {}
+rounds = 200
+for x in range(rounds):
+    for i in range(1, 50, 1):
+        u.write(bytearray([0x20 + (i % 94)] * i))
+        ret = b''
+        # Read back local echo
+        ret += u.read(i)
+        u.write('\r')
+        t0 = utime.ticks_cpu()
+        # \r + first response char
+        ret += u.read(2) 
+        t = utime.ticks_cpu() - t0
+        # rest of response
+        ret += u.read(49-2)
+
+        # Ignore measurement if the ticks are far off from the expected
+        if 300000 < t < 400000: 
+            try:
+                timings[i]['data'].append(t)
+            except KeyError:
+                timings[i] = {'data': [t], 'stats': {'avg': None, 'var': None, 'std': None}}
+```
+
+Only 21 characters stand out; all other amount of characters result in ~30000 CPU ticks between `\r` and first reply byte.
+
+```Default
+21: {'avg': 397759.9, 'std': 207.689, 'var': 43134.74}
+...
+```
+
+I used the same script to see if trying sll possible ASCII bytes at all different locations in the 21 character long password resulted in a longer timing, but this did not show anything useful.
+
+Maybe the LED contains some more information?
+We cannot measure the LED voltage directly, as it is covered in epoxy.
+I tried making a slowmotion capture for a few tries, but this did not show anything.
+Maybe some kind of [photodetector](https://en.wikipedia.org/wiki/Photodetector) is needed?
+I don't have that unfortunately...
+
+After being stuck for a while, my friend Thomas pointed out that you can also use [an LED as a photodetector](https://en.wikipedia.org/wiki/LED_circuit#LED_as_a_light_sensor). 
+Apparently, an LED is sensitive to wavelengths equal to or shorter than the wavelength it emits.
+I had some yellow LEDs laying around, so this might work!
+
+![Photodetector](figs/LED.jpeg){#fig-led width="75%"}
+
+With the LED hooked up to a Picoscope probe, the blink is indeed visible on the scope output:
+
+![LED measurement `AAAAAAAAAAAAAAAAAAAAA`](figs/LED-21-0.png){#fig-led0 width="75%"}
+
+And, with the script in @lst-script to run through all the possible bytes, and checking what shows up on the scope, the blink gets slightly longer for one of the bytes:
+
+![LED measurement `TAAAAAAAAAAAAAAAAAAAA`](figs/LED-21-1.png){#fig-led0 width="75%"}
+
+And, once we get all 21 bytes correct, the blink is the longest:
+
+![LED measurement `T1me_i5_not_c0nstant^`](figs/LED-21-21.png){#fig-led0 width="75%"}
+
+This shows that the password is `T1me_i5_not_c0nstant^`, which indeed gives us the next output:
+
+```Default
+Password is correct!
+Updating current time...
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 1Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+LagaLagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+LLagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+Lagavulin 16 is an exquisite whiskey - wait until 2057 to let it age until 50 YO. See you later!
+LaLagavulin 16 
+...
+```
+
+A date!
+This brings us back to the [HTTP request](#sec-wireless) from earlier.
+Maybe if we set the year to 2057, we move on?
+
+```Default
+Welcome! Curent time: 2057-11-16 22:44:13 . Have you thought how much time you wasted solving this?
+I chose a number.
+What number is it?
+> �3567898
+
+NaN
+I chose a number.
+What number is it?
+> 3567898
+
+Finally!
+
+You have guessed the number correctly!
+Enter password to authenticate:
+> T1me_i5_not_c0nstant^
+
+Password is correct!
+Updating current time...
+Finally, it is year 2057! Send me a text, and let's have some whiskey!
+https://drive.google.com/file/d/14QkjdSn_cTc_aWjrnAiFNW-FRLCPN9_7/view
+https://drive.google.com/file/d/14QkjdSn_cTc_aWjrnAiFNW-FRLCPN9_7/view
+...
+```
+
+Yes! 
+The link provides a picture, leading us to some treasure?
+
+![Treasure?](figs/PXL_20230928_175547160~3.jpg){#fig-treasure0 width="75%"}
+
+A bottle! 
+
+![Treasure!](figs/IMG_20240410_093929_083.jpg){#fig-treasure1 width="75%"}
+
+Lagavulin 16!
+
+![Whiskey!](figs/photo_2024-04-11_12-02-56.jpg){#fig-treasure2 width="75%"}
+
+# Tools used
+
+-   Laptop
+-   Hakko FX-888D
+-   Picoscope 2204A
+-   Andonstar AD208

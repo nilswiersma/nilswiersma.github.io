@@ -3,7 +3,6 @@ title: "Ninja Cards"
 abstract: "Solution to Synacktiv's CTF challenge from the 2023 edition of Hexacon."
 image: figs/flag.webp
 date: 2023-10-25
-
 ---
 
 # Intro
