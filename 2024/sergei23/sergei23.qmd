@@ -244,7 +244,7 @@ It is connected between the Pico's 3V3 output, and a GPIO, so it probably makes 
 
 After some reverse image searching on Google, I found a forum post where they mentioned that this is called a [reed switch](https://en.wikipedia.org/wiki/Reed_switch). 
 These are switches that get pulled together (or apart) when a magnetic field is nearby. 
-Using my cheap TODO microscope, you can see in @fig-reed2 that indeed, when you hold a magnet nearby, the two plates come together.
+Using my cheap microscope, you can see in @fig-reed2 that indeed, when you hold a magnet nearby, the two plates come together.
 
 ![Reed switch with magnet](figs/mystery-tube.gif){#fig-reed2 width="75%"}
 
