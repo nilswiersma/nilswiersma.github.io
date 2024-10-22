@@ -4,7 +4,7 @@ project:
 
 website:
   site-url: "https://nilswiersma.github.io/"
-  title: "nilswiersma.github.io"
+  title: "singlebitupset"
   sidebar:
     style: docked
     search: true
@@ -16,10 +16,10 @@ website:
         contents:
           - section: "2023"
             contents:
-              - 2023/hexacon23/hexacon23.qmd
+              - 2023/hexacon23/index.qmd
           - section: "2024"
             contents:
-              - 2024/sergei23/sergei23.qmd
+              - 2024/sergei23/index.qmd
       - about.qmd
 
 format:

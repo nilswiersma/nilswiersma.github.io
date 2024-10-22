@@ -5,7 +5,7 @@
       xmlns:dc="http://purl.org/dc/elements/1.1/" 
       version="2.0">
 <channel>
-<title>nilswiersma.github.io</title>
+<title>singlebitupset</title>
 <link>https://nilswiersma.github.io/</link>
 <atom:link href="https://nilswiersma.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
@@ -13,7 +13,7 @@
 <lastBuildDate>Fri, 12 Apr 2024 22:00:00 GMT</lastBuildDate>
 <item>
   <title>Sergei’s Mystery Block</title>
-  <link>https://nilswiersma.github.io/2024/sergei23/sergei23.html</link>
+  <link>https://nilswiersma.github.io/2024/sergei23/</link>
   <description><![CDATA[ 
 
 
@@ -737,13 +737,13 @@ Figure&nbsp;13: Whiskey!
 <li id="fn1"><p>But it does not actually reboot, just hang :(↩︎</p></li>
 </ol>
 </section></div> ]]></description>
-  <guid>https://nilswiersma.github.io/2024/sergei23/sergei23.html</guid>
+  <guid>https://nilswiersma.github.io/2024/sergei23/</guid>
   <pubDate>Fri, 12 Apr 2024 22:00:00 GMT</pubDate>
   <media:content url="https://nilswiersma.github.io/2024/sergei23/figs/epoxy.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Ninja Cards</title>
-  <link>https://nilswiersma.github.io/2023/hexacon23/hexacon23.html</link>
+  <link>https://nilswiersma.github.io/2023/hexacon23/</link>
   <description><![CDATA[ 
 
 
@@ -2409,7 +2409,7 @@ Figure&nbsp;4: o.mg cable
 </section>
 
  ]]></description>
-  <guid>https://nilswiersma.github.io/2023/hexacon23/hexacon23.html</guid>
+  <guid>https://nilswiersma.github.io/2023/hexacon23/</guid>
   <pubDate>Tue, 24 Oct 2023 22:00:00 GMT</pubDate>
   <media:content url="https://nilswiersma.github.io/2023/hexacon23/figs/flag.webp" medium="image" type="image/webp"/>
 </item>

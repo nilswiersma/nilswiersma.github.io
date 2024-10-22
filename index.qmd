@@ -3,8 +3,8 @@ title: "Home"
 listing:
   feed: true
   contents:
-    - 2023/hexacon23/hexacon23.qmd
-    - 2024/sergei23/sergei23.qmd
+    - 2023/hexacon23/index.qmd
+    - 2024/sergei23/index.qmd
 ---
 
 Dicta quo sed odio mollitia voluptas eveniet. Officiis eos voluptatem qui. Hic deleniti nulla quam eum mollitia qui voluptas qui. Harum pariatur eligendi necessitatibus optio consequatur facere.
