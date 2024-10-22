@@ -3,8 +3,8 @@ project:
   output-dir: docs
 
 website:
-  site-url: "https://nilswiersma.github.io/"
-  title: "singlebitupset"
+  site-url: "https://singlebitupset.com/"
+  title: "singlebitupset.com"
   sidebar:
     style: docked
     search: true

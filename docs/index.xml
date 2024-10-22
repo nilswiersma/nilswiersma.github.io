@@ -5,15 +5,15 @@
       xmlns:dc="http://purl.org/dc/elements/1.1/" 
       version="2.0">
 <channel>
-<title>singlebitupset</title>
-<link>https://nilswiersma.github.io/</link>
-<atom:link href="https://nilswiersma.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<title>singlebitupset.com</title>
+<link>https://singlebitupset.com/</link>
+<atom:link href="https://singlebitupset.com/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.4.544</generator>
 <lastBuildDate>Fri, 12 Apr 2024 22:00:00 GMT</lastBuildDate>
 <item>
   <title>Sergei’s Mystery Block</title>
-  <link>https://nilswiersma.github.io/2024/sergei23/</link>
+  <link>https://singlebitupset.com/2024/sergei23/</link>
   <description><![CDATA[ 
 
 
@@ -25,7 +25,7 @@
 <div id="fig-mystery-block" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-mystery-block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/epoxy.jpg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/epoxy.jpg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mystery-block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Mystery block
@@ -336,7 +336,7 @@ font-style: inherit;">'Server stopped.'</span>)</span></code></pre></div>
 <div id="fig-coil-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-coil-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/coil-on-coil-3.jpg" class="img-fluid figure-img" style="width:80.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/coil-on-coil-3.jpg" class="img-fluid figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coil-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Budget EM measurement
@@ -347,7 +347,7 @@ Figure&nbsp;2: Budget EM measurement
 <div id="fig-coil-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-coil-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/coil-on-coil-1.png" class="img-fluid figure-img">
+<img src="https://singlebitupset.com/2024/sergei23/figs/coil-on-coil-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coil-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: EM activity!
@@ -378,7 +378,7 @@ Figure&nbsp;3: EM activity!
 <div id="fig-reed" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-reed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/mystery-tube-0002.jpg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/mystery-tube-0002.jpg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Magnetic reed switch
@@ -389,7 +389,7 @@ Figure&nbsp;4: Magnetic reed switch
 <div id="fig-reed2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-reed2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/mystery-tube.gif" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/mystery-tube.gif" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reed2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5: Reed switch with magnet
@@ -430,7 +430,7 @@ Figure&nbsp;5: Reed switch with magnet
 <div id="fig-reed2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-reed2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/LED.gif" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/LED.gif" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reed2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6: Blinkyblink
@@ -605,7 +605,7 @@ font-style: inherit;">None</span>}}</span></code></pre></div>
 <div id="fig-led" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-led-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/LED.jpeg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/LED.jpeg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-led-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;7: Photodetector
@@ -616,7 +616,7 @@ Figure&nbsp;7: Photodetector
 <div id="fig-led0" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/LED-21-0.png" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/LED-21-0.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;8: LED measurement <code>AAAAAAAAAAAAAAAAAAAAA</code>
@@ -627,7 +627,7 @@ Figure&nbsp;8: LED measurement <code>AAAAAAAAAAAAAAAAAAAAA</code>
 <div id="fig-led0" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/LED-21-1.png" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/LED-21-1.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;9: LED measurement <code>TAAAAAAAAAAAAAAAAAAAA</code>
@@ -638,7 +638,7 @@ Figure&nbsp;9: LED measurement <code>TAAAAAAAAAAAAAAAAAAAA</code>
 <div id="fig-led0" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/LED-21-21.png" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/LED-21-21.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-led0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;10: LED measurement <code>T1me_i5_not_c0nstant^</code>
@@ -688,7 +688,7 @@ Figure&nbsp;10: LED measurement <code>T1me_i5_not_c0nstant^</code>
 <div id="fig-treasure0" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-treasure0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/PXL_20230928_175547160~3.jpg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/PXL_20230928_175547160~3.jpg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-treasure0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;11: Treasure?
@@ -699,7 +699,7 @@ Figure&nbsp;11: Treasure?
 <div id="fig-treasure1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-treasure1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/IMG_20240410_093929_083.jpg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/IMG_20240410_093929_083.jpg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-treasure1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;12: Treasure!
@@ -710,7 +710,7 @@ Figure&nbsp;12: Treasure!
 <div id="fig-treasure2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-treasure2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2024/sergei23/figs/photo_2024-04-11_12-02-56.jpg" class="img-fluid figure-img" style="width:75.0%">
+<img src="https://singlebitupset.com/2024/sergei23/figs/photo_2024-04-11_12-02-56.jpg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-treasure2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13: Whiskey!
@@ -737,13 +737,13 @@ Figure&nbsp;13: Whiskey!
 <li id="fn1"><p>But it does not actually reboot, just hang :(↩︎</p></li>
 </ol>
 </section></div> ]]></description>
-  <guid>https://nilswiersma.github.io/2024/sergei23/</guid>
+  <guid>https://singlebitupset.com/2024/sergei23/</guid>
   <pubDate>Fri, 12 Apr 2024 22:00:00 GMT</pubDate>
-  <media:content url="https://nilswiersma.github.io/2024/sergei23/figs/epoxy.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://singlebitupset.com/2024/sergei23/figs/epoxy.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Ninja Cards</title>
-  <link>https://nilswiersma.github.io/2023/hexacon23/</link>
+  <link>https://singlebitupset.com/2023/hexacon23/</link>
   <description><![CDATA[ 
 
 
@@ -755,7 +755,7 @@ Figure&nbsp;13: Whiskey!
 <div id="fig-setup" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2023/hexacon23/figs/setup.jpg" class="img-fluid figure-img">
+<img src="https://singlebitupset.com/2023/hexacon23/figs/setup.jpg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: CTF setup
@@ -766,7 +766,7 @@ Figure&nbsp;1: CTF setup
 <div id="fig-card" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-card-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2023/hexacon23/figs/card.png" class="img-fluid figure-img" style="width:50.0%">
+<img src="https://singlebitupset.com/2023/hexacon23/figs/card.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-card-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Card contents
@@ -2386,7 +2386,7 @@ Listing&nbsp;9: Data for both cards
 <div id="fig-flag" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-flag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2023/hexacon23/figs/flag.webp" class="img-fluid figure-img" style="width:50.0%">
+<img src="https://singlebitupset.com/2023/hexacon23/figs/flag.webp" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Flag obtained!
@@ -2397,7 +2397,7 @@ Figure&nbsp;3: Flag obtained!
 <div id="fig-prize" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://nilswiersma.github.io/2023/hexacon23/figs/omg-cable.webp" class="img-fluid figure-img" style="width:50.0%">
+<img src="https://singlebitupset.com/2023/hexacon23/figs/omg-cable.webp" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prize-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: o.mg cable
@@ -2409,9 +2409,9 @@ Figure&nbsp;4: o.mg cable
 </section>
 
  ]]></description>
-  <guid>https://nilswiersma.github.io/2023/hexacon23/</guid>
+  <guid>https://singlebitupset.com/2023/hexacon23/</guid>
   <pubDate>Tue, 24 Oct 2023 22:00:00 GMT</pubDate>
-  <media:content url="https://nilswiersma.github.io/2023/hexacon23/figs/flag.webp" medium="image" type="image/webp"/>
+  <media:content url="https://singlebitupset.com/2023/hexacon23/figs/flag.webp" medium="image" type="image/webp"/>
 </item>
 </channel>
 </rss>

@@ -3,8 +3,8 @@ title: "Home"
 listing:
   feed: true
   contents:
-    - 2023/hexacon23/index.qmd
     - 2024/sergei23/index.qmd
+    - 2023/hexacon23/index.qmd
 ---
 
 # Recent posts
